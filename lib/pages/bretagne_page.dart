@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'bretagne_game.dart';
+import 'intro_animation_enigme1.dart';
 
 class BretagnePage extends StatelessWidget {
   const BretagnePage({super.key});
@@ -10,7 +11,6 @@ class BretagnePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Fond en parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -26,7 +26,6 @@ class BretagnePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Bouton accessibilité
                   Align(
                     alignment: Alignment.topRight,
                     child: Column(
@@ -40,7 +39,6 @@ class BretagnePage extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // Logo + Titre
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -78,7 +76,7 @@ class BretagnePage extends StatelessWidget {
 
                   const SizedBox(height: 30),
 
-                  // Paragraphe
+
                   const Text(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -98,7 +96,7 @@ class BretagnePage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const BretagneGamePage()),
+                          MaterialPageRoute(builder: (context) => const IntroAnimationEnigme1()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
