@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../widgets/region_button.dart';
 import '../widgets/locked_button.dart';
 import 'bretagne_page.dart';
-
-import '../widgets/locked_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -43,28 +43,31 @@ class HomePage extends StatelessWidget {
 
                 const SizedBox(height: 80),
 
-                const Text(
+                Text(
                   "FOLKLORIK",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                    color: Colors.brown,
+                  style: GoogleFonts.podkova(
+                    textStyle: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: Colors.brown,
+                    ),
                   ),
                 ),
-                const Text(
+
+                Text(
                   "Escape Game",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'monospace',
-                    letterSpacing: 2,
-                    color: Colors.brown,
+                  style: GoogleFonts.tiltPrism(
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      letterSpacing: 2,
+                      color: Colors.brown,
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 60),
 
-                // Bouton Bretagne cliquable
                 RegionButton(
                   label: "Bretagne",
                   imagePath: 'assets/images/symbole-breton.png',
