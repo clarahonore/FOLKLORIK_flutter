@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/timer_button.dart';
-import '../widgets/dev_back_home_button.dart';
+import '../../widgets/timer_button.dart';
+import '../../widgets/dev_back_home_button.dart';
 import 'enigme1_porte.dart';
 
 class ReveilEnigme1 extends StatelessWidget {
