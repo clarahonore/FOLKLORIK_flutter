@@ -146,7 +146,7 @@ class _BretagnePageState extends State<BretagnePage> {
                   Expanded(
                     child: SingleChildScrollView(
                       child: const Text(
-                        "Vous voilà en terre de Brocéliande, au cœur des brumes éternelles. "
+                        /*"Vous voilà en terre de Brocéliande, au cœur des brumes éternelles. "
                             "La forêt murmure des noms oubliés : Viviane, Morgane, Arthur… "
                             "Mais un silence inquiétant grandit : celui de Merlin. "
                             "La mémoire du grand enchanteur s’efface. "
@@ -157,7 +157,7 @@ class _BretagnePageState extends State<BretagnePage> {
                             "puis préparez la potion de vitalité qui rendra sa conscience à Merlin. "
                             "Vous n’avez que 45 minutes avant que son nom ne s’efface à jamais. "
                             "Écoutez les fées, déchiffrez les runes, suivez les menhirs… "
-                            "Et que la légende survive à travers vous. 🌿 "
+                            "Et que la légende survive à travers vous. "
 
                             "Vous voilà en Brocéliande. "
                             "Les arbres se penchent comme s’ils vous observaient. "
@@ -176,7 +176,7 @@ class _BretagnePageState extends State<BretagnePage> {
 
                             "Hâtez-vous, voyageurs… "
                             "car bientôt, même son nom ne résonnera plus. "
-
+                            */
 
                             "Vous y voilà, vous etes arrivé en terre de Brocéliande, au cœur des brumes éternelles. "
                             "Autour de vous, les arbres se penchent comme si ’ils vous observaient et l’atmosphère sent la mousse et la magie ancienne de la fôret. "
