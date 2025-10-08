@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
 import '../../widgets/dev_back_home_button.dart';
-import 'autelMenhirs.dart';
+import '../enigme_3/autelMenhirs.dart';
 
 class MenhirsEnigme extends StatefulWidget {
   const MenhirsEnigme({super.key});
@@ -115,18 +115,24 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8),
+            color: Colors.grey.withOpacity(0.4),
             borderRadius: BorderRadius.circular(16),
           ),
           child: const Text(
             "Bravo ! Vous avez trouvé la bonne combinaison !",
-            style: TextStyle(color: Colors.white, fontSize: 22),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.none,
+            ),
           ),
         ),
       ),
     );
 
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 5));
     if (mounted) Navigator.pop(context); // ferme popup
     if (mounted) {
       Navigator.pushReplacement(
