@@ -25,6 +25,6 @@
 
     assets:
       - assets/images/
-      - assets/icons/
-      - assets/videos/
-      - assets/audio/
+    #  - assets/icons/
+    #  - assets/videos/
+    #  - assets/audio/

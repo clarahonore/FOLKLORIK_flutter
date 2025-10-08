@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'scenario.dart';
 
 class Dao {
   //La reférence de notre base de données
@@ -30,11 +31,58 @@ class Dao {
     await db.execute(''' 
       CREATE TABLE scenario (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom VARCHAR(255) NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        piste_audio VARCHAR(225) NOT NULL
+        nom TEXT NOT NULL,
+        description TEXT NOT NULL,
+        piste_audio TEXT NOT NULL
       ) 
     ''');
 
+  }
+
+  //Lecture de Scenario
+  static Future<List<Scenario>> listeScenario() async {
+    final db = await database;
+
+    final maps = await db.query(
+      "scenario",
+      columns: ["*"],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.map((e) => Scenario.fromJson(e)).toList();
+    } else {
+      return [];
+    }
+  }
+
+  //Insertion
+  static Future<Scenario> createScenario(Scenario scenario) async {
+    final db = await database;
+    final id = await db.insert("scenario", scenario.toJson());
+    scenario.id = id;
+    return scenario;
+  }
+
+  //Modification - Mise à Jour
+  static Future<int> updateScenario(Scenario scenario) async {
+    final db = await database;
+    Map<String, dynamic> data = scenario.toJson();
+    data.remove("id"); //Nous prenons soin de supprimer le champs id avec ..remove("id")
+    return db.update(
+      "scenario",
+      data,
+      where: 'id = ?',
+      whereArgs: [scenario.id],
+    );
+  }
+
+  //Suppression
+  static Future<int> delete(int id) async {
+    final db = await database;
+    return await db.delete(
+      "scenario",
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
