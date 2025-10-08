@@ -25,4 +25,4 @@
       - assets/images/
       #- assets/icons/
       #- assets/videos/
-      #- assets/audio/
+      - assets/audio/

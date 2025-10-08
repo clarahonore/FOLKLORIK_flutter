@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:mon_app/pages/home.dart';
-
+import '../services/audio_service.dart';
 import 'intro_animation_enigme1.dart';
 
-class BretagnePage extends StatelessWidget {
+class BretagnePage extends StatefulWidget {
   const BretagnePage({super.key});
+
+  @override
+  State<BretagnePage> createState() => _BretagnePageState();
+
+}
+
+class _BretagnePageState extends State<BretagnePage> {
+  final AudioService _stereo = AudioService();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _stereo.playAsset("audio/audio_bretagne.mp3");
+  }
+
+  @override
+  void dispose() {
+    _stereo.stop();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
