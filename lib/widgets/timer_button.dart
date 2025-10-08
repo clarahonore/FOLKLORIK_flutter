@@ -1,66 +1,42 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../services/game_timer_service.dart';
+
+
 
 class TimerButton extends StatefulWidget {
-  final int durationInMinutes;
-  final Function()? onTimerEnd;
-
-  const TimerButton({
-    super.key,
-    this.durationInMinutes = 45,
-    this.onTimerEnd,
-  });
+  const TimerButton({super.key});
 
   @override
   State<TimerButton> createState() => _TimerButtonState();
 }
 
 class _TimerButtonState extends State<TimerButton> {
-  late Duration remainingTime;
-  Timer? _timer;
-  bool isRunning = true;
+  final GameTimerService _timerService = GameTimerService();
+  late Duration _remaining;
 
   @override
   void initState() {
     super.initState();
-    remainingTime = Duration(minutes: widget.durationInMinutes);
-    _startTimer();
+    _remaining = _timerService.remainingTime;
+    _timerService.addListener(_onTick);
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingTime.inSeconds > 0) {
-        setState(() {
-          remainingTime -= const Duration(seconds: 1);
-        });
-      } else {
-        timer.cancel();
-        widget.onTimerEnd?.call();
-      }
-    });
-  }
-
-  void _toggleTimer() {
+  void _onTick(Duration duration) {
     setState(() {
-      if (isRunning) {
-        _timer?.cancel();
-      } else {
-        _startTimer();
-      }
-      isRunning = !isRunning;
+      _remaining = duration;
     });
+  }
+
+  @override
+  void dispose() {
+    _timerService.removeListener(_onTick);
+    super.dispose();
   }
 
   String _formatTime(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     return "${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds % 60)}";
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   void _showExpandedTimer(BuildContext context) {
@@ -75,7 +51,6 @@ class _TimerButtonState extends State<TimerButton> {
               filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
               child: Container(color: Colors.black.withOpacity(0)),
             ),
-
             Center(
               child: Material(
                 color: Colors.transparent,
@@ -83,7 +58,7 @@ class _TimerButtonState extends State<TimerButton> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _formatTime(remainingTime),
+                      _formatTime(_remaining),
                       style: const TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
@@ -93,7 +68,7 @@ class _TimerButtonState extends State<TimerButton> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () {
-                        _toggleTimer();
+                        _timerService.toggle();
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
@@ -104,7 +79,7 @@ class _TimerButtonState extends State<TimerButton> {
                         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
                       ),
                       child: Text(
-                        isRunning ? 'STOP' : 'REPRENDRE',
+                        _timerService.isRunning ? 'STOP' : 'REPRENDRE',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -136,7 +111,7 @@ class _TimerButtonState extends State<TimerButton> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            _formatTime(remainingTime),
+            _formatTime(_remaining),
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

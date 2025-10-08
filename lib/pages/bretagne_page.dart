@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'bretagne_game.dart';
 import 'intro_animation_enigme1.dart';
 
 class BretagnePage extends StatelessWidget {
