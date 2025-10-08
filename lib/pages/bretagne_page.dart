@@ -22,9 +22,10 @@ class _BretagnePageState extends State<BretagnePage> {
   }
 
   @override
-  void dispose() {
-    _stereo.stop();
+  Future<void> dispose() async{
+
     super.dispose();
+    await _stereo.stop();
   }
 
 
