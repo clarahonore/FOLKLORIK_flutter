@@ -13,6 +13,7 @@
     cupertino_icons: ^1.0.8
     google_fonts: ^6.1.0
     audioplayers: ^6.5.1
+    just_audio: ^0.10.5
   dev_dependencies:
     flutter_test:
       sdk: flutter
@@ -25,4 +26,4 @@
       - assets/images/
       #- assets/icons/
       #- assets/videos/
-      #- assets/audio/
+      - assets/audio/bretagne.mp3
