@@ -12,17 +12,18 @@
       sdk: flutter
     cupertino_icons: ^1.0.8
     google_fonts: ^6.1.0
-    audioplayers: ^5.2.1
+    audioplayers: ^6.5.1
+    just_audio: ^0.10.5
   dev_dependencies:
     flutter_test:
       sdk: flutter
-    flutter_lints: ^5.0.0
+    flutter_lints: ^6.0.0
 
   flutter:
     uses-material-design: true
 
     assets:
       - assets/images/
-      - assets/icons/
-      - assets/videos/
-      - assets/audio/
+      #- assets/icons/
+      #- assets/videos/
+      - assets/audio/bretagne.mp3
