@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_app/pages/home.dart';
 
 import 'intro_animation_enigme1.dart';
 
@@ -25,15 +26,41 @@ class BretagnePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Column(
-                      children: const [
-                        Icon(Icons.visibility),
-                        SizedBox(height: 4),
-                        Text("Accessibilité", style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // BOUTON RETOUR À GAUCHE
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const HomePage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B5E3C),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 2,
+                        ),
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        label: const Text(
+                          "Retour",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+
+                      // ICONE ACCESSIBILITÉ À DROITE
+                      Column(
+                        children: const [
+                          Icon(Icons.visibility),
+                          SizedBox(height: 4),
+                          Text("Accessibilité", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 40),
@@ -89,7 +116,7 @@ class BretagnePage extends StatelessWidget {
 
                   const Spacer(),
 
-
+                  //Bouton Commencer
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -117,7 +144,9 @@ class BretagnePage extends StatelessWidget {
                         ),
                       ),
                     ),
+
                   ),
+
 
                   const SizedBox(height: 40),
                 ],
