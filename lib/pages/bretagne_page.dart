@@ -31,6 +31,8 @@ class _BretagnePageState extends State<BretagnePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: Stack(
         children: [
@@ -45,7 +47,7 @@ class _BretagnePageState extends State<BretagnePage> {
 
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: screenHeight * 0.04 ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
