@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import '../widgets/dev_back_home_button.dart';
-import '../widgets/timer_button.dart';
-import 'enigme_2/intro_pont_menhirs.dart';
+import '../../widgets/dev_back_home_button.dart';
+import '../../widgets/timer_button.dart';
 
-class Enigme1PortePage extends StatefulWidget {
-  const Enigme1PortePage({super.key});
+class autelMenhirPage extends StatefulWidget {
+  const autelMenhirPage({super.key});
 
   @override
-  State<Enigme1PortePage> createState() => _Enigme1PortePageState();
+  State<autelMenhirPage> createState() => _Enigme2AutelPageState();
 }
 
-class _Enigme1PortePageState extends State<Enigme1PortePage>
+class _Enigme2AutelPageState extends State<autelMenhirPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
@@ -65,8 +64,9 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
               showSecondImage
-                  ? 'assets/images/porte_inscription_proche.png'
-                  : 'assets/images/porte_inscription_loin.png',
+                  ? 'assets/images/autel.png'
+                  //mettre un autelvu du dessus dans ?
+                  : 'assets/images/autel.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -76,7 +76,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               child: FadeTransition(
                 opacity: _opacityAnimation,
                 child: const Text(
-                  "Cliquer pour avancer jusqu'à la porte",
+                  "Cliquer pour avancer jusqu'à l'autel",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -104,7 +104,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        "\u2728 Énigme 1 : Trouver le code des runes",
+                        "\u2728 Énigme 3 : Poème hivernal",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        "Voici une description à changer : explore les symboles autour de la porte pour reconstituer le code sacré.",
+                        "Voici un poème à déchiffrer, découvrer ce sa signification et résolvez l'énigme.",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
@@ -147,36 +147,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 onPressed: _openInstructions,
                 backgroundColor: Colors.brown,
                 child: const Icon(Icons.info_outline),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: ElevatedButton(
-                  onPressed: () async {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const IntroAnimationEnigme2()),
-                      );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Passer à enigme 2',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
               ),
             ),
         ],
