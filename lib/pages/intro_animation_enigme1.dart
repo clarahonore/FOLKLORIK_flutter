@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'bretagne_game.dart';
+import '../services/game_timer_service.dart';
+import 'reveil_enigme1.dart';
 
 class IntroAnimationEnigme1 extends StatefulWidget {
   const IntroAnimationEnigme1({super.key});
@@ -22,6 +23,8 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
   @override
   void initState() {
     super.initState();
+
+    GameTimerService().start();
 
     _audioPlayer = AudioPlayer();
     _audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
@@ -53,7 +56,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
         hasNavigated = true;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const BretagneGamePage()),
+          MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
         );
       }
     });
@@ -70,11 +73,11 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> zoom = Tween<double>(begin: 1.0, end: 1.1).animate(
+    final zoom = Tween<double>(begin: 1.0, end: 1.1).animate(
       showSecondImage ? _zoomController2 : _zoomController1,
     );
 
-    final Animation<double> flashOpacity = Tween<double>(begin: 0.0, end: 0.8).animate(
+    final flashOpacity = Tween<double>(begin: 0.0, end: 0.8).animate(
       CurvedAnimation(parent: _flashController, curve: Curves.easeInOut),
     );
 
@@ -83,7 +86,6 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
       body: Stack(
         fit: StackFit.expand,
         children: [
-
           AnimatedBuilder(
             animation: zoom,
             builder: (context, child) {
@@ -106,6 +108,41 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
                 color: Colors.white.withOpacity(flashOpacity.value),
               );
             },
+          ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (!hasNavigated) {
+                    hasNavigated = true;
+                    await _audioPlayer.stop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'PASSER INTRO',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
