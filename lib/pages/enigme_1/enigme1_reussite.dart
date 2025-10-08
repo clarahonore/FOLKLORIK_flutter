@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../enigme_2/intro_pont_menhirs.dart';
 
 class Enigme1Reussite extends StatefulWidget {
   const Enigme1Reussite({super.key});
@@ -15,6 +16,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
 
   bool showPorteOuverte = false;
   bool showBlackScreen = false;
+  bool showNextButton = false;
 
   @override
   void initState() {
@@ -41,13 +43,9 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
       _fadeController.forward();
     });
 
-    //  Redirection désactivée pour le moment
-    // Future.delayed(const Duration(seconds: 6), () {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (_) => const SuivantPage()),
-    //   );
-    // });
+    Future.delayed(const Duration(seconds: 4), () {
+      setState(() => showNextButton = true);
+    });
   }
 
   @override
@@ -57,6 +55,13 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
     super.dispose();
   }
 
+  void _goToNextPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const IntroAnimationEnigme2()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +69,6 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
       body: Stack(
         fit: StackFit.expand,
         children: [
-
           if (!showPorteOuverte)
             AnimatedBuilder(
               animation: _zoomController,
@@ -89,11 +93,37 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
               ),
             ),
 
-
           if (showBlackScreen)
             FadeTransition(
               opacity: _fadeController,
               child: Container(color: Colors.black),
+            ),
+
+          if (showNextButton && showPorteOuverte)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 60),
+                child: ElevatedButton(
+                  onPressed: _goToNextPage,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    "Continuer vers l'Énigme 2",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
         ],
       ),
