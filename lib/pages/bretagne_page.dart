@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'enigme_1/intro_animation_enigme1.dart';
 import 'package:mon_app/pages/home.dart';
 import '../services/audio_service.dart';
-import 'intro_animation_enigme1.dart';
+//import 'intro_animation_enigme1.dart';
 
 class BretagnePage extends StatefulWidget {
   const BretagnePage({super.key});
@@ -169,9 +171,7 @@ class _BretagnePageState extends State<BretagnePage> {
                         ),
                       ),
                     ),
-
                   ),
-
 
                   const SizedBox(height: 40),
                 ],

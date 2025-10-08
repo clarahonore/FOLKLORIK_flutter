@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../services/game_timer_service.dart';
+
+import '../../services/game_timer_service.dart';
 import 'reveil_enigme1.dart';
 
 class IntroAnimationEnigme1 extends StatefulWidget {
@@ -11,7 +12,8 @@ class IntroAnimationEnigme1 extends StatefulWidget {
   State<IntroAnimationEnigme1> createState() => _IntroAnimationEnigme1State();
 }
 
-class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with TickerProviderStateMixin {
+class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
+    with TickerProviderStateMixin {
   late final AnimationController _zoomController1;
   late final AnimationController _zoomController2;
   late final AnimationController _flashController;
@@ -24,26 +26,32 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
   void initState() {
     super.initState();
 
+    // Démarre le timer global
     GameTimerService().start();
 
+    // Lance la musique
     _audioPlayer = AudioPlayer();
     _audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
 
+    // Animation de zoom image 1
     _zoomController1 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 8),
     )..forward();
 
+    // Animation de zoom image 2
     _zoomController2 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 8),
     );
 
+    // Animation de flash
     _flashController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
 
+    // Changement d’image après 8s
     Future.delayed(const Duration(seconds: 8), () async {
       await _flashController.forward();
       setState(() => showSecondImage = true);
@@ -51,6 +59,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
       await _flashController.reverse();
     });
 
+    // Redirection après 16s
     Future.delayed(const Duration(seconds: 16), () {
       if (!hasNavigated) {
         hasNavigated = true;
@@ -86,6 +95,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // Zoom sur image 1 ou 2
           AnimatedBuilder(
             animation: zoom,
             builder: (context, child) {
@@ -101,6 +111,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
             },
           ),
 
+          // Flash blanc de transition
           AnimatedBuilder(
             animation: flashOpacity,
             builder: (context, child) {
@@ -110,6 +121,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
             },
           ),
 
+          // Bouton "PASSER INTRO"
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -127,7 +139,8 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1> with Tick
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

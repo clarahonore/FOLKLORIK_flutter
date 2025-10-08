@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import '../../widgets/dev_back_home_button.dart';
+import '../../widgets/timer_button.dart';
+
+class Enigme1PortePage extends StatefulWidget {
+  const Enigme1PortePage({super.key});
+
+  @override
+  State<Enigme1PortePage> createState() => _Enigme1PortePageState();
+}
+
+class _Enigme1PortePageState extends State<Enigme1PortePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  final TextEditingController _controllerText = TextEditingController();
+
+  bool showSecondImage = false;
+  bool showInstructions = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controllerText.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    setState(() {
+      showSecondImage = true;
+      showInstructions = true;
+    });
+    _controller.stop();
+  }
+
+  void _closeInstructions() {
+    setState(() {
+      showInstructions = false;
+    });
+  }
+
+  void _openInstructions() {
+    setState(() {
+      showInstructions = true;
+    });
+  }
+
+  void _checkAnswer() {
+    final input = _controllerText.text.trim().toLowerCase();
+    if (input == 'viviane') {
+      Navigator.pushReplacementNamed(context, '/enigme1_reussite');
+    } else {
+      Navigator.pushReplacementNamed(context, '/enigme1_echec');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Image de fond (zoom proche ou loin)
+          GestureDetector(
+            onTap: !showSecondImage ? _handleTap : null,
+            child: Image.asset(
+              showSecondImage
+                  ? 'assets/images/porte_inscription_proche.png'
+                  : 'assets/images/porte_inscription_loin.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Texte clignotant si image éloignée
+          if (!showSecondImage)
+            Center(
+              child: FadeTransition(
+                opacity: _opacityAnimation,
+                child: const Text(
+                  "Cliquer pour avancer jusqu'à la porte",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+
+
+          const TimerButton(),
+          const DevBackHomeButton(),
+
+          if (showSecondImage && showInstructions)
+            Container(
+              color: Colors.black.withOpacity(0.85),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "\u2728 Énigme 1 : Trouver le code des runes",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Voici une description à changer : explore les symboles autour de la porte pour reconstituer le code sacré.",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: _closeInstructions,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Passer à l'énigme",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          // Bulle info pour rouvrir les consignes
+          if (showSecondImage && !showInstructions)
+            Positioned(
+              top: 16,
+              left: 16,
+              child: FloatingActionButton(
+                onPressed: _openInstructions,
+                backgroundColor: Colors.brown,
+                child: const Icon(Icons.info_outline),
+              ),
+            ),
+
+          if (showSecondImage && !showInstructions)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 80.0, left: 24.0, right: 24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextField(
+                        controller: _controllerText,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: 'Entrez le mot de passe...',
+                          hintStyle: TextStyle(color: Colors.white54),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _checkAnswer,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Valider",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
