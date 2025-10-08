@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import 'intro_animation_enigme1.dart';
+import 'enigme_1/intro_animation_enigme1.dart';
 
 class BretagnePage extends StatefulWidget {
   const BretagnePage({super.key});
