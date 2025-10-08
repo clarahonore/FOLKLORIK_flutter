@@ -20,7 +20,7 @@ class RegionButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF8B5E3C),
-          minimumSize: const Size.fromHeight(60),
+          minimumSize: Size.fromHeight(60),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),

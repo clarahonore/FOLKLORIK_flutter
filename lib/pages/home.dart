@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>{
-  final AudioService _stereo = AudioService();
+  /*final AudioService _stereo = AudioService();
 
   @override
   void initState() {
@@ -28,10 +28,12 @@ class _HomePageState extends State<HomePage>{
 
     super.dispose();
     await _stereo.stop();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: Stack(
         children: [
@@ -46,9 +48,10 @@ class _HomePageState extends State<HomePage>{
           ),
 
           SafeArea(
+            child:  SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.02),
 
                 Align(
                   alignment: Alignment.topRight,
@@ -63,13 +66,13 @@ class _HomePageState extends State<HomePage>{
                   ),
                 ),
 
-                const SizedBox(height: 80),
+                SizedBox(height: screenHeight * 0.08, width: screenWidth * 0.02),
 
                 Text(
                   "FOLKLORIK",
                   style: GoogleFonts.podkova(
-                    textStyle: const TextStyle(
-                      fontSize: 48,
+                    textStyle: TextStyle(
+                      fontSize: screenWidth * 0.1,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       color: Colors.brown,
@@ -80,17 +83,18 @@ class _HomePageState extends State<HomePage>{
                 Text(
                   "Escape Game",
                   style: GoogleFonts.tiltPrism(
-                    textStyle: const TextStyle(
-                      fontSize: 20,
+                    textStyle: TextStyle(
+                      fontSize: screenWidth * 0.05,
                       letterSpacing: 2,
                       color: Colors.brown,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 60),
+                SizedBox(height: 60, width: screenWidth * 0.7),
 
                 RegionButton(
+
                   label: "Bretagne",
                   imagePath: 'assets/images/symbole-breton.png',
                   onPressed: () {
@@ -104,6 +108,7 @@ class _HomePageState extends State<HomePage>{
                 const LockedButton(label: "Haut de France"),
                 const LockedButton(label: "Occitanie"),
               ],
+            ),
             ),
           ),
         ],

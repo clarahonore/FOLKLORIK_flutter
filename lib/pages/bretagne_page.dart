@@ -12,7 +12,7 @@ class BretagnePage extends StatefulWidget {
 }
 
 class _BretagnePageState extends State<BretagnePage> {
-  final AudioService _stereo = AudioService();
+  /*final AudioService _stereo = AudioService();
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _BretagnePageState extends State<BretagnePage> {
     super.dispose();
     await _stereo.stop();
   }
-
+  */
 
   @override
   Widget build(BuildContext context) {
