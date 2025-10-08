@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/dev_back_home_button.dart';
-import '../widgets/timer_button.dart';
+import '../../widgets/dev_back_home_button.dart';
+import '../../widgets/timer_button.dart';
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -13,6 +13,9 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
+
+  final TextEditingController _controllerText = TextEditingController();
+
   bool showSecondImage = false;
   bool showInstructions = false;
 
@@ -31,6 +34,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
   @override
   void dispose() {
     _controller.dispose();
+    _controllerText.dispose();
     super.dispose();
   }
 
@@ -54,12 +58,22 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
     });
   }
 
+  void _checkAnswer() {
+    final input = _controllerText.text.trim().toLowerCase();
+    if (input == 'viviane') {
+      Navigator.pushReplacementNamed(context, '/enigme1_reussite');
+    } else {
+      Navigator.pushReplacementNamed(context, '/enigme1_echec');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // Image de fond (zoom proche ou loin)
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -70,6 +84,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             ),
           ),
 
+          // Texte clignotant si image éloignée
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -80,14 +95,13 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(blurRadius: 10, color: Colors.black),
-                    ],
+                    shadows: [Shadow(blurRadius: 10, color: Colors.black)],
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
+
 
           const TimerButton(),
           const DevBackHomeButton(),
@@ -99,7 +113,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
@@ -138,6 +151,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
+          // Bulle info pour rouvrir les consignes
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -146,6 +160,50 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 onPressed: _openInstructions,
                 backgroundColor: Colors.brown,
                 child: const Icon(Icons.info_outline),
+              ),
+            ),
+
+          if (showSecondImage && !showInstructions)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 80.0, left: 24.0, right: 24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextField(
+                        controller: _controllerText,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: 'Entrez le mot de passe...',
+                          hintStyle: TextStyle(color: Colors.white54),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _checkAnswer,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Valider",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
         ],
