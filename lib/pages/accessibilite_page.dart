@@ -12,11 +12,14 @@ class AccessibilitePage extends StatefulWidget {
 
 class _AccessibilitePageState extends State<AccessibilitePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _buttonAudio = AudioPlayer(); // 🎵 pour le bouton retour
+  bool _retourAudioPlayed = false; // 👈 pour gérer le double clic
 
   Future<void> _playAudio(String audioPath) async {
     final access = context.read<AccessibiliteStatus>();
     if (access.narrationActive) {
       try {
+        await _audioPlayer.stop();
         await _audioPlayer.setSource(AssetSource(audioPath));
         await _audioPlayer.setVolume(0.85);
         await _audioPlayer.resume();
@@ -26,10 +29,31 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
     }
   }
 
+  Future<void> _handleRetourButton(BuildContext context) async {
+    final access = context.read<AccessibiliteStatus>();
+
+    if (access.narrationActive && !_retourAudioPlayed) {
+      // 🟢 Premier clic → joue le son
+      try {
+        await _buttonAudio.stop();
+        await _buttonAudio.setSource(AssetSource('audio/Retour.m4a'));
+        await _buttonAudio.setVolume(0.85);
+        await _buttonAudio.resume();
+        setState(() => _retourAudioPlayed = true);
+      } catch (e) {
+        debugPrint("Erreur audio Retour.m4a : $e");
+      }
+    } else {
+      // 🟤 Deuxième clic (ou narration désactivée) → retour à la page précédente
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void dispose() {
     _audioPlayer.stop();
     _audioPlayer.dispose();
+    _buttonAudio.dispose();
     super.dispose();
   }
 
@@ -60,7 +84,9 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               value: access.sonActive,
               onChanged: (_) {
                 access.toggleSon();
-                _playAudio(access.sonActive ? 'audio/son_on.mp3' : 'audio/son_off.mp3');
+                _playAudio(access.sonActive
+                    ? 'audio/son activé.m4a'
+                    : 'audio/son désactivé.m4a');
               },
               activeColor: Colors.brown,
             ),
@@ -72,7 +98,9 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               value: access.contraste,
               onChanged: (_) {
                 access.toggleContraste();
-                _playAudio(access.contraste ? 'audio/contraste_on.mp3' : 'audio/contraste_off.mp3');
+                _playAudio(access.contraste
+                    ? 'audio/Contraste activé.m4a'
+                    : 'audio/Contraste désactivé.m4a');
               },
               activeColor: Colors.brown,
             ),
@@ -80,11 +108,14 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
             // 🎨 Daltonisme
             SwitchListTile(
               title: const Text("Mode daltonien"),
-              subtitle: const Text("Adapte les couleurs pour une meilleure visibilité"),
+              subtitle:
+              const Text("Adapte les couleurs pour une meilleure visibilité"),
               value: access.daltonisme,
               onChanged: (_) {
                 access.toggleDaltonisme();
-                _playAudio(access.daltonisme ? 'audio/daltonisme_on.mp3' : 'audio/daltonisme_off.mp3');
+                _playAudio(access.daltonisme
+                    ? 'audio/Mode daltonien activé.m4a'
+                    : 'audio/Mode daltonien désactivé.m4a');
               },
               activeColor: Colors.brown,
             ),
@@ -96,7 +127,9 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               value: access.texteGrand,
               onChanged: (_) {
                 access.toggleTexteGrand();
-                _playAudio(access.texteGrand ? 'audio/texte_on.mp3' : 'audio/texte_off.mp3');
+                _playAudio(access.texteGrand
+                    ? 'audio/Texte agrandi activé.m4a'
+                    : 'audio/texte agrandi désactivé.m4a');
               },
               activeColor: Colors.brown,
             ),
@@ -104,7 +137,8 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
             // 📝 Narration
             SwitchListTile(
               title: const Text("Narration"),
-              subtitle: const Text("Active ou désactive la narration globale"),
+              subtitle:
+              const Text("Active ou désactive la narration globale"),
               value: access.narrationActive,
               onChanged: (_) => access.toggleNarration(),
               activeColor: Colors.brown,
@@ -112,20 +146,18 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
 
             const Spacer(),
 
-            // 🔙 Bouton retour avec audio
+            // 🔙 Bouton retour avec double clic audio
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B5E3C),
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                onPressed: () {
-                  _playAudio('audio/retour_access.mp3');
-                  Navigator.pop(context);
-                },
+                onPressed: () => _handleRetourButton(context),
                 child: const Text(
                   "RETOUR",
                   style: TextStyle(
@@ -135,7 +167,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
