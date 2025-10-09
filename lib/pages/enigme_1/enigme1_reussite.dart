@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../enigme_2/intro_pont_menhirs.dart';
 
 class Enigme1Reussite extends StatefulWidget {
@@ -15,12 +16,18 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
   late AnimationController _fadeController;
   late AnimationController _textFadeController;
 
+  late final AudioPlayer _audioPlayer; // 🎵 Audio au démarrage
+
   bool showPorteOuverte = false;
   bool showBlackScreen = false;
 
   @override
   void initState() {
     super.initState();
+
+    // 🎵 Lancer l'audio dès l'ouverture de la page
+    _audioPlayer = AudioPlayer();
+    _audioPlayer.play(AssetSource('audio/porte en bois.m4a'));
 
     _zoomController = AnimationController(
       vsync: this,
@@ -67,6 +74,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
     _zoomController.dispose();
     _fadeController.dispose();
     _textFadeController.dispose();
+    _audioPlayer.dispose(); // 🚨 Important pour libérer la ressource audio
     super.dispose();
   }
 

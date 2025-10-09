@@ -31,18 +31,18 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
 
     // Lance la musique
     _audioPlayer = AudioPlayer();
-    _audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
+    _audioPlayer.play(AssetSource('audio/cabane_reveil.m4a'));
 
     // Animation de zoom image 1
     _zoomController1 = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 8),
+      duration: const Duration(seconds: 23),
     )..forward();
 
     // Animation de zoom image 2
     _zoomController2 = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 8),
+      duration: const Duration(seconds: 54),
     );
 
     // Animation de flash
@@ -52,7 +52,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
     );
 
     // Changement d’image après 8s
-    Future.delayed(const Duration(seconds: 8), () async {
+    Future.delayed(const Duration(seconds: 23), () async {
       await _flashController.forward();
       setState(() => showSecondImage = true);
       _zoomController2.forward();
@@ -60,7 +60,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
     });
 
     // Redirection après 16s
-    Future.delayed(const Duration(seconds: 16), () {
+    Future.delayed(const Duration(seconds: 77), () {
       if (!hasNavigated) {
         hasNavigated = true;
         Navigator.pushReplacement(

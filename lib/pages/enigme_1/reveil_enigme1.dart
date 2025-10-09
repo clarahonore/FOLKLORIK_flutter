@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
+
 import '../../widgets/timer_button.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/app_button.dart';
+import '../../services/accessibilite_status.dart';
 import 'enigme1_porte.dart';
 
 class ReveilEnigme1 extends StatefulWidget {
@@ -18,11 +22,15 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
+
+  final AudioPlayer _buttonAudioPlayer = AudioPlayer();
+  bool _buttonSoundPlayed = false;
+
   @override
   void initState() {
     super.initState();
 
-    // 🎬 Animation de fondu pour le bouton
+
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -32,7 +40,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
       curve: Curves.easeIn,
     );
 
-    // ⏳ Délai avant affichage du bouton
+
     Timer(const Duration(seconds: 3), () {
       setState(() => _showButton = true);
       _fadeController.forward();
@@ -42,15 +50,45 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
   @override
   void dispose() {
     _fadeController.dispose();
+    _buttonAudioPlayer.dispose();
     super.dispose();
+  }
+
+
+  Future<void> _handleSortirCabane(BuildContext context, bool narrationActive) async {
+    if (narrationActive && !_buttonSoundPlayed) {
+      try {
+        await _buttonAudioPlayer.stop();
+        await _buttonAudioPlayer.setVolume(1.0);
+        await _buttonAudioPlayer.setSource(AssetSource('audio/Sortir de la cabane.m4a'));
+        await _buttonAudioPlayer.resume();
+        setState(() => _buttonSoundPlayed = true);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Appuyez encore pour sortir de la cabane..."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } catch (e) {
+        debugPrint("Erreur audio bouton SORTIR DE LA CABANE : $e");
+      }
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const Enigme1PortePage()),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final access = context.watch<AccessibiliteStatus>();
+
     return Scaffold(
       body: Stack(
         children: [
-          // 🌄 Image de fond
+
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -63,7 +101,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           SafeArea(
             child: Column(
               children: [
-                // 🔹 Bouton menu (placeholder)
+
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -75,15 +113,15 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                   ),
                 ),
 
-                // ⏳ Timer en haut
+
                 const TimerButton(),
 
                 const Spacer(),
 
-                // 🏠 Bouton retour dev home
+
                 const DevBackHomeButton(),
 
-                // ✨ Bouton principal centré avec fondu
+
                 if (_showButton)
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -92,14 +130,8 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                       child: Center(
                         child: AppButton(
                           text: "SORTIR DE LA CABANE",
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const Enigme1PortePage(),
-                              ),
-                            );
-                          },
+                          onPressed: () =>
+                              _handleSortirCabane(context, access.narrationActive),
                         ),
                       ),
                     ),
