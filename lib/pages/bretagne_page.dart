@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-
+import 'package:provider/provider.dart';
+import 'package:mon_app/pages/accessibilite_page.dart';
+import 'package:mon_app/services/accessibilite_status.dart';
 import 'enigme_1/intro_animation_enigme1.dart';
+import 'home.dart';
 
 class BretagnePage extends StatefulWidget {
   const BretagnePage({super.key});
@@ -12,28 +15,37 @@ class BretagnePage extends StatefulWidget {
 
 class BretagnePageState extends State<BretagnePage> {
   late final AudioPlayer _audioPlayer;
+  Duration _currentPosition = Duration.zero;
+  bool _isPlaying = false;
+  bool _audioInitialise = false;
 
   @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
-    _initializeAudio();
+    _setupAudio();
+  }
+
+  Future<void> _setupAudio() async {
+    final access = context.read<AccessibiliteStatus>();
+    if (access.sonActive && !_audioInitialise) {
+      await _initializeAudio();
+      _audioInitialise = true;
+    }
+
+    _audioPlayer.onPositionChanged.listen((pos) {
+      _currentPosition = pos;
+    });
   }
 
   Future<void> _initializeAudio() async {
     try {
-      // 🕐 Laisse le moteur audio Android se préparer
       await Future.delayed(const Duration(milliseconds: 800));
-
-      // 🔊 Mode de lecture haute qualité
       await _audioPlayer.setPlayerMode(PlayerMode.mediaPlayer);
-
-      // 🎚️ Réduit un peu le volume pour éviter saturation et pertes
       await _audioPlayer.setVolume(0.85);
-
-      // 🎵 Lecture du fichier audio
       await _audioPlayer.setSource(AssetSource('audio/bretagne.mp3'));
       await _audioPlayer.resume();
+      _isPlaying = true;
     } catch (e) {
       debugPrint("Erreur audio : $e");
     }
@@ -48,10 +60,26 @@ class BretagnePageState extends State<BretagnePage> {
 
   @override
   Widget build(BuildContext context) {
+    final access = context.watch<AccessibiliteStatus>();
+
+    // ⚡ Gestion dynamique du son
+    if (access.sonActive && !_isPlaying) {
+      _audioPlayer.seek(_currentPosition);
+      _audioPlayer.resume();
+      _isPlaying = true;
+    } else if (!access.sonActive && _isPlaying) {
+      _audioPlayer.pause();
+      _isPlaying = false;
+    }
+
+    final Color backgroundColor = access.contraste ? Colors.black : Colors.white;
+    final Color textColor = access.contraste ? Colors.white : Colors.black87;
+    final double fontSizeFactor = access.texteGrand ? 1.2 : 1.0;
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          // ✅ Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -60,25 +88,63 @@ class BretagnePageState extends State<BretagnePage> {
               ),
             ),
           ),
-
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 🔹 Boutons Accueil + Accessibilité
                   Align(
                     alignment: Alignment.topRight,
-                    child: Column(
-                      children: const [
-                        Icon(Icons.visibility),
-                        SizedBox(height: 4),
-                        Text("Accessibilité", style: TextStyle(fontSize: 12)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Bouton Accueil
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const HomePage()),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Icon(Icons.home, color: textColor),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Accueil",
+                                style: TextStyle(fontSize: 12, color: textColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        // Bouton Accessibilité
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AccessibilitePage(),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Icon(Icons.visibility, color: textColor),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Accessibilité",
+                                style: TextStyle(fontSize: 12, color: textColor),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 40),
-
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -90,11 +156,11 @@ class BretagnePageState extends State<BretagnePage> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               "LE FOLKLORIK",
                               style: TextStyle(
-                                fontSize: 28,
+                                fontSize: 28 * fontSizeFactor,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.brown,
                               ),
@@ -102,7 +168,7 @@ class BretagnePageState extends State<BretagnePage> {
                             Text(
                               "DE BRETAGNE",
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 24 * fontSizeFactor,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.brown,
                                 letterSpacing: 1,
@@ -114,71 +180,20 @@ class BretagnePageState extends State<BretagnePage> {
                     ],
                   ),
                   const SizedBox(height: 30),
-
-                  // ✅ Texte déroulable
                   Expanded(
                     child: SingleChildScrollView(
-                      child: const Text(
-                        "Vous voilà en terre de Brocéliande, au cœur des brumes éternelles. "
-                            "La forêt murmure des noms oubliés : Viviane, Morgane, Arthur… "
-                            "Mais un silence inquiétant grandit : celui de Merlin. "
-                            "La mémoire du grand enchanteur s’efface. "
-                            "Chaque minute qui passe l’éloigne un peu plus du monde des vivants. "
-                            "Si son souvenir disparaît, les contes et la magie bretonne sombreront avec lui. "
-                            "Votre mission est claire : "
-                            "retrouvez les fragments de mémoire disséminés dans la forêt, "
-                            "puis préparez la potion de vitalité qui rendra sa conscience à Merlin. "
-                            "Vous n’avez que 45 minutes avant que son nom ne s’efface à jamais. "
-                            "Écoutez les fées, déchiffrez les runes, suivez les menhirs… "
-                            "Et que la légende survive à travers vous. 🌿 "
-
-                            "Vous voilà en Brocéliande. "
-                            "Les arbres se penchent comme s’ils vous observaient. "
-                            "L’air sent la mousse et la magie ancienne. "
-                            "Mais quelque chose manque… "
-                            "Une voix. "
-                            "Une présence. "
-                            "Merlin, le grand enchanteur, s’endort. "
-                            "Son nom s’efface des mémoires. "
-                            "Si vous ne faites rien, la Bretagne oubliera sa propre légende. "
-                            "Vous n’avez que quarante-cinq minutes pour raviver son souvenir. "
-                            "Trouvez les fragments de mémoire, "
-                            "déchiffrez les runes, "
-                            "suivez les menhirs, "
-                            "et préparez la potion de vitalité qui lui rendra la parole. "
-
-                            "Hâtez-vous, voyageurs… "
-                            "car bientôt, même son nom ne résonnera plus. "
-
-
-                            "Vous y voilà, vous etes arrivé en terre de Brocéliande, au cœur des brumes éternelles. "
-                            "Autour de vous, les arbres se penchent comme si ’ils vous observaient et l’atmosphère sent la mousse et la magie ancienne de la fôret. "
-                            "Le vent dans ces basses contrées murmure des noms oubliés tel Morgane, Arthur, Lancelot… "
-                            "Mais un silence inquiétant grandit cependant. "
-                            "Vous sentez dans ces murmure ’il manque quelque chose…ou plutôt quelqu’un… "
-                            "La mémoire du grand enchanteur s’efface. Que dis je Merlin s’efface. "
-                            "Si son souvenir disparaît, les contes et la magie sombreront et la Bretagne oubliera sa propre légende. "
-                            "Vous n’avez que 45 min pour raviver son souvenir dans l’esprit de chacun. "
-                            "Alors écoutez les fées, "
-                            "déchiffrez les runes, "
-                            "suivez les menhirs, "
-                            "mais avant tout préparez la potion de vitalité qui sauvera Merlin de l’oubli. "
-
-                            "Hâtez-vous, voyageurs du temps… "
-                            "car bientôt, même son nom ne résonnera plus. "
-                            "Que la légende survive à travers vous. ",
+                      child: Text(
+                        "Vous y voilà, vous êtes arrivés en terres de Brocéliande...",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 16 * fontSizeFactor,
                           height: 1.5,
-                          color: Colors.black87,
+                          color: textColor,
                         ),
                         textAlign: TextAlign.justify,
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // ✅ Bouton
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -190,20 +205,17 @@ class BretagnePageState extends State<BretagnePage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8B5E3C),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 16,
-                        ),
+                        backgroundColor: access.contraste ? Colors.grey[800] : const Color(0xFF8B5E3C),
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 5,
                       ),
-                      child: const Text(
+                      child: Text(
                         "COMMENCER",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18 * fontSizeFactor,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                           color: Colors.white,
