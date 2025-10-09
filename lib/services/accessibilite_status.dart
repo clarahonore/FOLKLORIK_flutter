@@ -5,7 +5,7 @@ class AccessibiliteStatus extends ChangeNotifier {
   bool contraste = false;
   bool daltonisme = false;
   bool texteGrand = false;
-  bool narrationActive = false; // 🔹 Nouveau paramètre pour la narration
+  bool narrationActive = false;
 
   void toggleSon() {
     sonActive = !sonActive;

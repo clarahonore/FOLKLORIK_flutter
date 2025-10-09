@@ -12,8 +12,8 @@ class AccessibilitePage extends StatefulWidget {
 
 class _AccessibilitePageState extends State<AccessibilitePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final AudioPlayer _buttonAudio = AudioPlayer(); // 🎵 pour le bouton retour
-  bool _retourAudioPlayed = false; // 👈 pour gérer le double clic
+  final AudioPlayer _buttonAudio = AudioPlayer(); // pour le bouton retour
+  bool _retourAudioPlayed = false; // gére le double clic
 
   Future<void> _playAudio(String audioPath) async {
     final access = context.read<AccessibiliteStatus>();
@@ -33,7 +33,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
     final access = context.read<AccessibiliteStatus>();
 
     if (access.narrationActive && !_retourAudioPlayed) {
-      // 🟢 Premier clic → joue le son
+      // Premier clic = le son
       try {
         await _buttonAudio.stop();
         await _buttonAudio.setSource(AssetSource('audio/Retour.m4a'));
@@ -44,7 +44,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
         debugPrint("Erreur audio Retour.m4a : $e");
       }
     } else {
-      // 🟤 Deuxième clic (ou narration désactivée) → retour à la page précédente
+      // Deuxième clic (ou narration désactivée) = retour à la page précédente
       Navigator.pop(context);
     }
   }
@@ -91,7 +91,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               activeColor: Colors.brown,
             ),
 
-            // 👁️ Contraste élevé
+            // Contraste élevé
             SwitchListTile(
               title: const Text("Contraste élevé"),
               subtitle: const Text("Améliore la lisibilité des textes"),
@@ -105,7 +105,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               activeColor: Colors.brown,
             ),
 
-            // 🎨 Daltonisme
+            // Daltonisme
             SwitchListTile(
               title: const Text("Mode daltonien"),
               subtitle:
@@ -120,7 +120,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               activeColor: Colors.brown,
             ),
 
-            // 🔠 Taille du texte
+            // Taille du texte
             SwitchListTile(
               title: const Text("Texte agrandi"),
               subtitle: const Text("Augmente la taille des polices"),
@@ -134,7 +134,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
               activeColor: Colors.brown,
             ),
 
-            // 📝 Narration
+            // Narration
             SwitchListTile(
               title: const Text("Narration"),
               subtitle:
@@ -146,7 +146,7 @@ class _AccessibilitePageState extends State<AccessibilitePage> {
 
             const Spacer(),
 
-            // 🔙 Bouton retour avec double clic audio
+            // Bouton retour avec double clic audio
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(

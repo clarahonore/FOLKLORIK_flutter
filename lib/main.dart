@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-// 🧭 Import des pages
 import 'package:mon_app/pages/intro_folklorik.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_mauvaise_reponse.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_porte.dart';
@@ -9,8 +7,6 @@ import 'package:mon_app/pages/enigme_1/enigme1_reussite.dart';
 import 'package:mon_app/pages/home.dart';
 import 'package:mon_app/pages/bretagne_page.dart';
 import 'package:mon_app/pages/accessibilite_page.dart';
-
-// 🧩 Import du service global d’accessibilité
 import 'package:mon_app/services/accessibilite_status.dart';
 
 void main() {
@@ -27,10 +23,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔹 Récupère les paramètres d’accessibilité globaux
+    // Récupère les paramètres d’accessibilité globaux
     final access = context.watch<AccessibiliteStatus>();
 
-    // 🎨 Choix du thème selon le contraste
+    // Choix du thème selon le contraste
     final theme = access.contraste
         ? ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.highContrastDark(),
