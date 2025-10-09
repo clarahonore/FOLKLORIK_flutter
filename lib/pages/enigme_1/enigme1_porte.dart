@@ -60,7 +60,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
 
   void _checkAnswer() {
     final input = _controllerText.text.trim().toLowerCase();
-    if (input == 'viviane') {
+    if (input == 'source viviane') {
       Navigator.pushReplacementNamed(context, '/enigme1_reussite');
     } else {
       Navigator.pushReplacementNamed(context, '/enigme1_echec');

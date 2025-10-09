@@ -13,10 +13,10 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
     with TickerProviderStateMixin {
   late AnimationController _zoomController;
   late AnimationController _fadeController;
+  late AnimationController _textFadeController;
 
   bool showPorteOuverte = false;
   bool showBlackScreen = false;
-  bool showNextButton = false;
 
   @override
   void initState() {
@@ -38,13 +38,27 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
       duration: const Duration(seconds: 2),
     );
 
+    _textFadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
     Future.delayed(const Duration(seconds: 4), () {
       setState(() => showBlackScreen = true);
       _fadeController.forward();
+
+      Future.delayed(const Duration(seconds: 1), () {
+        _textFadeController.forward();
+      });
     });
 
-    Future.delayed(const Duration(seconds: 4), () {
-      setState(() => showNextButton = true);
+    Future.delayed(const Duration(seconds: 8), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const IntroAnimationEnigme2()),
+        );
+      }
     });
   }
 
@@ -52,14 +66,8 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
   void dispose() {
     _zoomController.dispose();
     _fadeController.dispose();
+    _textFadeController.dispose();
     super.dispose();
-  }
-
-  void _goToNextPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const IntroAnimationEnigme2()),
-    );
   }
 
   @override
@@ -88,7 +96,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
               duration: const Duration(seconds: 1),
               opacity: 1,
               child: Image.asset(
-                  'assets/images/enigme1_porte_ouverte.png',
+                'assets/images/enigme1_porte_ouverte.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -99,27 +107,27 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
               child: Container(color: Colors.black),
             ),
 
-          if (showNextButton && showPorteOuverte)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 60),
-                child: ElevatedButton(
-                  onPressed: _goToNextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    "Continuer vers l'Énigme 2",
-                    style: TextStyle(
-                      fontSize: 20,
+          if (showBlackScreen)
+            FadeTransition(
+              opacity: _textFadeController,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text(
+                    "✨ Félicitations !\n\nVous avez réussi la première énigme.\n\nVous sortez de la cabane...",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      height: 1.6,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black54,
+                          blurRadius: 10,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
                     ),
                   ),
                 ),
