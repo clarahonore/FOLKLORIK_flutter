@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
-import '../../widgets/app_button.dart'; // ✅ ton bouton stylé
+import '../../widgets/app_button.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -24,12 +25,14 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
   void initState() {
     super.initState();
 
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat(reverse: true);
 
     _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+
   }
 
   @override
