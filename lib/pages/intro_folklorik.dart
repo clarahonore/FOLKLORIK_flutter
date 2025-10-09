@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'home.dart'; // ⚠️ Vérifie le chemin correct vers HomePage
+import 'home.dart';
 
 class IntroFolklorik extends StatefulWidget {
   const IntroFolklorik({super.key});
@@ -25,7 +25,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
       await _audioPlayer.setVolume(0.9);
       await _audioPlayer.resume();
 
-      // Le texte s’affiche en même temps que le son
+      // Le texte s’affiche
       setState(() => _showText = true);
 
       // Quand l’audio se termine → animation de glissement vers HomePage
@@ -42,7 +42,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
     }
   }
 
-  // 🌀 Animation de glissement vers HomePage
+  // Animation de glissement vers HomePage
   Route _createSlideRoute() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 800),
@@ -74,7 +74,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌄 Fond d’écran parchemin
+          // Fond d’écran parchemin
           const DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -84,7 +84,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
             ),
           ),
 
-          // ✨ Texte centré avec fondu et scroll si nécessaire
+          // Texte centré avec fondu et scroll si nécessaire
           AnimatedOpacity(
             opacity: _showText ? 1.0 : 0.0,
             duration: const Duration(seconds: 2),
@@ -136,7 +136,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
             ),
           ),
 
-          // ⬇️ Bouton "Passer" en bas de l'écran
+          // Bouton Passer
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
