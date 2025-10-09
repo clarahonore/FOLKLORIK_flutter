@@ -73,7 +73,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Image de fond (zoom proche ou loin)
+
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -84,7 +84,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             ),
           ),
 
-          // Texte clignotant si image éloignée
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -103,8 +102,17 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             ),
 
 
-          const TimerButton(),
-          const DevBackHomeButton(),
+          const Positioned(
+            top: 40,
+            right: 30,
+            child: TimerButton(),
+          ),
+
+          const Positioned(
+            top: 200,
+            left: 16,
+            child: DevBackHomeButton(),
+          ),
 
           if (showSecondImage && showInstructions)
             Container(
@@ -151,7 +159,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-          // Bulle info pour rouvrir les consignes
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,

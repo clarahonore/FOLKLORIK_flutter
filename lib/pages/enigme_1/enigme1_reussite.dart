@@ -88,7 +88,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
               duration: const Duration(seconds: 1),
               opacity: 1,
               child: Image.asset(
-                'assets/images/enigme1_porte_ouverte.png',
+                  'assets/images/enigme1_porte_ouverte.png',
                 fit: BoxFit.cover,
               ),
             ),
