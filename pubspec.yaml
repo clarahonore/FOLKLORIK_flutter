@@ -14,6 +14,7 @@
     google_fonts: ^6.1.0
     audioplayers: ^6.5.1
     just_audio: ^0.10.5
+    provider: ^6.1.2
   dev_dependencies:
     flutter_test:
       sdk: flutter
@@ -27,3 +28,7 @@
       #- assets/icons/
       #- assets/videos/
       - assets/audio/bretagne.mp3
+      - assets/audio/commencer.mp3
+      - assets/audio/bretagne_access.mp3
+      - assets/audio/texte_on.mp3
+      - assets/audio/all_scénario.mp3
