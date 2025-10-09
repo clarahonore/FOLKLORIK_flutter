@@ -68,6 +68,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final access = context.watch<AccessibiliteStatus>();
+
     final Color backgroundColor = access.contraste ? Colors.black : Colors.white;
     final Color textColor = access.contraste ? Colors.white : Colors.black87;
     final double fontSizeFactor = access.texteGrand ? 1.2 : 1.0;
@@ -76,6 +77,7 @@ class HomePageState extends State<HomePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
+          // 🧾 Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -84,10 +86,13 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
           SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 20),
+
+                // 👁️ Bouton Accessibilité
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -104,9 +109,13 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 80),
+
+                // 🪶 TITRE avec STROKE cuivre
                 Stack(
                   children: [
+                    // Contour cuivre (stroke)
                     Text(
                       "FOLKLORIK",
                       style: GoogleFonts.podkova(
@@ -116,11 +125,12 @@ class HomePageState extends State<HomePage> {
                           letterSpacing: 2,
                           foreground: Paint()
                             ..style = PaintingStyle.stroke
-                            ..strokeWidth = 1.4
+                            ..strokeWidth = 2.8
                             ..color = const Color(0xFFBF8038),
                         ),
                       ),
                     ),
+                    // Remplissage intérieur
                     Text(
                       "FOLKLORIK",
                       style: GoogleFonts.podkova(
@@ -129,19 +139,26 @@ class HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2,
                           color: const Color(0xFF3B240C),
-                          shadows: [
-                            Shadow(
-                              color: Colors.black54,
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
+
+                Text(
+                  "Escape Game",
+                  style: GoogleFonts.tiltPrism(
+                    textStyle: TextStyle(
+                      fontSize: 20 * fontSizeFactor,
+                      letterSpacing: 2,
+                      color: const Color(0xFF8B5E3C),
+                    ),
+                  ),
+                ),
+
                 const SizedBox(height: 60),
+
+                // 🌿 Bouton BRETAGNE stylisé
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: GestureDetector(
@@ -170,19 +187,19 @@ class HomePageState extends State<HomePage> {
                           center: Alignment(-0.3, -0.4),
                           radius: 1.2,
                           colors: [
-                            Color(0xFFBF8038),
-                            Color(0xFF593C1A),
+                            Color(0xFFBF8038), // cuivre
+                            Color(0xFF593C1A), // brun profond
                           ],
                           stops: [0.42, 1.0],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black38,
+                            color: Colors.black.withOpacity(0.4),
                             blurRadius: 10,
                             offset: const Offset(3, 4),
                           ),
                           BoxShadow(
-                            color: Colors.amber,
+                            color: Colors.amber.withOpacity(0.2),
                             blurRadius: 15,
                             offset: const Offset(-2, -2),
                           ),
@@ -219,6 +236,7 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 const LockedButton(label: "Haut de France"),
                 const LockedButton(label: "Occitanie"),
