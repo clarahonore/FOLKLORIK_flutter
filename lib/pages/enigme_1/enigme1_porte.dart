@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
+import '../../widgets/app_button.dart'; // ✅ ton bouton stylé
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -73,7 +74,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-
+          // 🪄 Image de fond dynamique
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -84,6 +85,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             ),
           ),
 
+          // ✨ Texte clignotant
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -101,7 +103,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-
           const Positioned(
             top: 40,
             right: 30,
@@ -114,6 +115,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             child: DevBackHomeButton(),
           ),
 
+          // 🪶 Fenêtre des consignes
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
@@ -139,19 +141,11 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
-                      ElevatedButton(
+
+                      // 🔸 Bouton stylé “Passer à l’énigme”
+                      AppButton(
+                        text: "Passer à l'énigme",
                         onPressed: _closeInstructions,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          "Passer à l'énigme",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
                       ),
                     ],
                   ),
@@ -159,6 +153,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
+          // 🧭 Bouton info pour rouvrir les consignes
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -170,6 +165,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
+          // 🧩 Zone du champ et validation
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
@@ -178,6 +174,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Champ texte
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -195,19 +192,11 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
+
+                    // 🔸 Bouton stylé “Valider”
+                    AppButton(
+                      text: "Valider",
                       onPressed: _checkAnswer,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        "Valider",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
                     ),
                   ],
                 ),
