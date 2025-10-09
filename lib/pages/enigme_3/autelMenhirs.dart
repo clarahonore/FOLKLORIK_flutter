@@ -185,9 +185,9 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
             return Center(
               child: Container(
                 width: size.width * 0.9,
-                height: size.height * 0.8,
+                margin: const EdgeInsets.symmetric(vertical: 40),
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.6),
+                  color: Colors.black.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
@@ -197,166 +197,235 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Poème hivernal",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        decoration: TextDecoration.none,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Poème hivernal",
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          decoration: TextDecoration.none,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: const Text(
-                          "A travers les montagnes enneigées, un garçon s’éveilla. Ses cheveux aux couleurs du feu, virevoltent au vent frais du matin. \n"
-                              "Dans son ascension néanmoins, il découvrit avec stupeur une rose étincelante où la rosée se contemplait tel mille miroirs.",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            decoration: TextDecoration.none,
-                          ),
+                      const SizedBox(height: 32),
+                      const Text(
+                        "À travers les montagnes enneigées, un garçon s’éveilla. "
+                            "Ses cheveux aux couleurs du feu virevoltent au vent frais du matin.\n\n"
+                            "Dans son ascension néanmoins, il découvrit avec stupeur une rose étincelante "
+                            "où la rosée se contemplait tel mille miroirs.",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          height: 1.5,
+                          decoration: TextDecoration.none,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                      const SizedBox(height: 40),
+
+                      // 🧩 Cases vides du code
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (context, child) {
+                          final dx = _shakeAnimation.value;
+                          return Transform.translate(
+                            offset: Offset(dx, 0),
+                            child: child,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(5, (index) {
+                            final symbol = chosenSymbols[index];
+                            return Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white, width: 2),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black.withOpacity(0.3),
+                              ),
+                              child: symbol != null
+                                  ? Image.asset(symbol, fit: BoxFit.contain)
+                                  : null,
+                            );
+                          }),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
 
-                    // === Zone symboles ===
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 120),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AnimatedBuilder(
-                              animation: _shakeController,
-                              builder: (context, child) {
-                                final dx = _shakeAnimation.value;
-                                return Transform.translate(
-                                  offset: Offset(dx, 0),
-                                  child: child,
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: List.generate(5, (index) {
-                                  final symbol = chosenSymbols[index];
-                                  return Container(
+                      const SizedBox(height: 16),
+
+                      // 🔹 Symboles à choisir
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: List.generate(symbols.length, (index) {
+                          return GestureDetector(
+                            onTap: disabled[index]
+                                ? null
+                                : () {
+                              setState(() {
+                                final firstEmptyIndex =
+                                chosenSymbols.indexOf(null);
+                                if (firstEmptyIndex != -1) {
+                                  chosenSymbols[firstEmptyIndex] =
+                                  symbols[index];
+                                  disabled[index] = true;
+                                }
+                              });
+                              setStateDialog(() {});
+                              if (!chosenSymbols.contains(null)) {
+                                _checkOrder(() => setStateDialog(() {}));
+                              }
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    symbols[index],
                                     width: 60,
                                     height: 60,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white, width: 2),
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.black.withOpacity(0.3),
-                                    ),
-                                    child: symbol != null
-                                        ? Image.asset(symbol,
-                                        fit: BoxFit.contain)
-                                        : null,
-                                  );
-                                }),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(5, (index) {
-                                return GestureDetector(
-                                  onTap: disabled[index]
-                                      ? null
-                                      : () {
-                                    setState(() {
-                                      final firstEmptyIndex =
-                                      chosenSymbols.indexOf(null);
-                                      if (firstEmptyIndex != -1) {
-                                        chosenSymbols[firstEmptyIndex] =
-                                        symbols[index];
-                                        disabled[index] = true;
-                                      }
-                                    });
-                                    setStateDialog(() {}); // 🔄 force rebuild de la popup
-                                    if (!chosenSymbols.contains(null)) {
-                                      _checkOrder(() => setStateDialog(() {}));
-                                    }
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Image.asset(
-                                          symbols[index],
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        if (disabled[index])
-                                          BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                                sigmaX: 3, sigmaY: 3),
-                                            child: Container(
-                                              width: 60,
-                                              height: 60,
-                                              color:
-                                              Colors.black.withOpacity(0.4),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                    fit: BoxFit.contain,
                                   ),
-                                );
-                              }),
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  resetSymbols();
-                                });
-                                setStateDialog(() {});
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.brown,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 12),
+                                  if (disabled[index])
+                                    BackdropFilter(
+                                      filter:
+                                      ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                                      child: Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.black.withOpacity(0.4),
+                                      ),
+                                    ),
+                                ],
                               ),
-                              child: const Text("Réinitialiser",
-                                  style: TextStyle(color: Colors.white)),
                             ),
-                          ],
-                        ),
+                          );
+                        }),
                       ),
-                    ),
 
-                    const SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.brown,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      const SizedBox(height: 40),
+
+                      // 🔸 Bouton stylisé “Réinitialiser”
+                      SizedBox(
+                        width: 220,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              resetSymbols();
+                            });
+                            setStateDialog(() {});
+                          },
+                          borderRadius: BorderRadius.circular(14),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              gradient: const RadialGradient(
+                                center: Alignment(-0.3, -0.4),
+                                radius: 1.2,
+                                colors: [
+                                  Color(0xFFBF8038),
+                                  Color(0xFF593C1A),
+                                ],
+                                stops: [0.42, 1.0],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 10,
+                                  offset: const Offset(3, 4),
+                                ),
+                                BoxShadow(
+                                  color: Colors.amber.withOpacity(0.2),
+                                  blurRadius: 15,
+                                  offset: const Offset(-2, -2),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 20),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "RÉINITIALISER",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(1, 1),
+                                    blurRadius: 3,
+                                    color: Colors.black54,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        child: const Text(
-                          "Fermer",
-                          style:
-                          TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // 🔸 Bouton stylisé “Fermer”
+                      SizedBox(
+                        width: 220,
+                        child: InkWell(
+                          onTap: () => Navigator.pop(context),
+                          borderRadius: BorderRadius.circular(14),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              gradient: const RadialGradient(
+                                center: Alignment(-0.3, -0.4),
+                                radius: 1.2,
+                                colors: [
+                                  Color(0xFFBF8038),
+                                  Color(0xFF593C1A),
+                                ],
+                                stops: [0.42, 1.0],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 10,
+                                  offset: const Offset(3, 4),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 20),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "FERMER",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(1, 1),
+                                    blurRadius: 3,
+                                    color: Colors.black54,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -365,7 +434,6 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
