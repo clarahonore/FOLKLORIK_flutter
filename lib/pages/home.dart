@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import '../widgets/region_button.dart';
 import '../widgets/locked_button.dart';
+import '../widgets/app_button.dart';
 import 'bretagne_page.dart';
 import 'accessibilite_page.dart';
 import '../services/accessibilite_status.dart';
@@ -20,7 +20,7 @@ class HomePageState extends State<HomePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   bool _bretagneNarrationPlayed = false;
-  bool _accessibiliteSoundPlayed = false; // 👈 pour le double-clic accessibilité
+  bool _accessibiliteSoundPlayed = false;
 
   Future<void> _playBretagneAccessAudio() async {
     try {
@@ -32,7 +32,6 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  /// 🔊 Lecture du son "Accessibilité"
   Future<void> _handleAccessibilite(BuildContext context, bool narrationActive) async {
     if (narrationActive && !_accessibiliteSoundPlayed) {
       try {
@@ -69,7 +68,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final access = context.watch<AccessibiliteStatus>();
-
     final Color backgroundColor = access.contraste ? Colors.black : Colors.white;
     final Color textColor = access.contraste ? Colors.white : Colors.black87;
     final double fontSizeFactor = access.texteGrand ? 1.2 : 1.0;
@@ -90,8 +88,6 @@ class HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-
-                // 👁️ Bouton Accessibilité avec double-clic audio
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -102,66 +98,128 @@ class HomePageState extends State<HomePage> {
                         children: [
                           Icon(Icons.visibility, color: textColor),
                           const SizedBox(height: 4),
+                          Text("Accessibilité", style: TextStyle(fontSize: 12, color: textColor)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 80),
+                Stack(
+                  children: [
+                    Text(
+                      "FOLKLORIK",
+                      style: GoogleFonts.podkova(
+                        textStyle: TextStyle(
+                          fontSize: 48 * fontSizeFactor,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 1.4
+                            ..color = const Color(0xFFBF8038),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "FOLKLORIK",
+                      style: GoogleFonts.podkova(
+                        textStyle: TextStyle(
+                          fontSize: 48 * fontSizeFactor,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                          color: const Color(0xFF3B240C),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black54,
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 60),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (access.narrationActive && !_bretagneNarrationPlayed) {
+                        await _playBretagneAccessAudio();
+                        setState(() => _bretagneNarrationPlayed = true);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Appuyez encore pour entrer en Bretagne..."),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const BretagnePage()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 65,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: const RadialGradient(
+                          center: Alignment(-0.3, -0.4),
+                          radius: 1.2,
+                          colors: [
+                            Color(0xFFBF8038),
+                            Color(0xFF593C1A),
+                          ],
+                          stops: [0.42, 1.0],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 10,
+                            offset: const Offset(3, 4),
+                          ),
+                          BoxShadow(
+                            color: Colors.amber,
+                            blurRadius: 15,
+                            offset: const Offset(-2, -2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/symbole-breton.png',
+                            height: 30,
+                            width: 30,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 12),
                           Text(
-                            "Accessibilité",
-                            style: TextStyle(fontSize: 12, color: textColor),
+                            "BRETAGNE",
+                            style: GoogleFonts.podkova(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.5,
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(1.5, 1.5),
+                                  blurRadius: 3,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 80),
-
-                // Titres
-                Text(
-                  "FOLKLORIK",
-                  style: GoogleFonts.podkova(
-                    textStyle: TextStyle(
-                      fontSize: 48 * fontSizeFactor,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: Colors.brown,
-                    ),
-                  ),
-                ),
-                Text(
-                  "Escape Game",
-                  style: GoogleFonts.tiltPrism(
-                    textStyle: TextStyle(
-                      fontSize: 20 * fontSizeFactor,
-                      letterSpacing: 2,
-                      color: Colors.brown,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 60),
-
-                // 🧭 Bouton Bretagne avec narration double-clic
-                RegionButton(
-                  label: "Bretagne",
-                  imagePath: 'assets/images/symbole-breton.png',
-                  onPressed: () async {
-                    if (access.narrationActive && !_bretagneNarrationPlayed) {
-                      await _playBretagneAccessAudio();
-                      setState(() => _bretagneNarrationPlayed = true);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Appuyez encore pour entrer en Bretagne..."),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const BretagnePage()),
-                      );
-                    }
-                  },
-                ),
-
+                const SizedBox(height: 20),
                 const LockedButton(label: "Haut de France"),
                 const LockedButton(label: "Occitanie"),
               ],
