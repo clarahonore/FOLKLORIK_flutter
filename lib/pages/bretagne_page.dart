@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 import 'package:mon_app/pages/accessibilite_page.dart';
 import 'package:mon_app/services/accessibilite_status.dart';
+import 'package:mon_app/widgets/app_button.dart';
 import 'enigme_1/intro_animation_enigme1.dart';
 import 'home.dart';
 
@@ -281,8 +282,20 @@ class BretagnePageState extends State<BretagnePage> {
                   ),
                   const SizedBox(height: 20),
 
+                  // 🔸 Ici on remplace ton bouton par le widget global
+
                   // Bouton COMMENCER
                   Center(
+                    child: AppButton(
+                      text: "COMMENCER",
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const IntroAnimationEnigme1(),
+                          ),
+                        );
+                      },
                     child: ElevatedButton(
                       onPressed: () => _handleCommencer(context, access.narrationActive),
                       style: ElevatedButton.styleFrom(
@@ -305,6 +318,7 @@ class BretagnePageState extends State<BretagnePage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 40),
                 ],
               ),
