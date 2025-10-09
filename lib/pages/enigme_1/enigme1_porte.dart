@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
-import '../../prompts/prompts_merlin.dart';
-import '../../widgets/voice_assistant_button.dart';
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -103,14 +101,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-          const Positioned(
-            top: 100,
-            left: 16,
-            child: VoiceAssistantButton(
-              systemPrompt: promptMerlinEnigme1,
-              color: Colors.indigo,
-            ),
-          ),
 
           const Positioned(
             top: 40,
