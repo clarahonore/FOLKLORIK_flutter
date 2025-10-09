@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
-import '../../widgets/app_button.dart'; // ✅ ton bouton stylé
+import '../../widgets/app_button.dart';
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -74,7 +74,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🪄 Image de fond dynamique
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -84,8 +83,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               fit: BoxFit.cover,
             ),
           ),
-
-          // ✨ Texte clignotant
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -102,20 +99,16 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 ),
               ),
             ),
-
           const Positioned(
             top: 40,
             right: 30,
             child: TimerButton(),
           ),
-
           const Positioned(
             top: 200,
             left: 16,
             child: DevBackHomeButton(),
           ),
-
-          // 🪶 Fenêtre des consignes
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
@@ -126,7 +119,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        "\u2728 Énigme 1 : Trouver le code des runes",
+                        "✨ Énigme 1 : L’énigme des runes",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -136,13 +129,11 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        "Voici une description à changer : explore les symboles autour de la porte pour reconstituer le code sacré.",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        "Avec les galets que vous trouverez sur la table devant vous, trouvez le code secret pour déverrouiller la porte.",
+                        style: TextStyle(fontSize: 16, color: Colors.white, height: 1.4),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
-
-                      // 🔸 Bouton stylé “Passer à l’énigme”
                       AppButton(
                         text: "Passer à l'énigme",
                         onPressed: _closeInstructions,
@@ -152,8 +143,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 ),
               ),
             ),
-
-          // 🧭 Bouton info pour rouvrir les consignes
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -164,8 +153,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 child: const Icon(Icons.info_outline),
               ),
             ),
-
-          // 🧩 Zone du champ et validation
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
@@ -174,7 +161,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Champ texte
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -192,8 +178,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                     ),
                     const SizedBox(height: 12),
-
-                    // 🔸 Bouton stylé “Valider”
                     AppButton(
                       text: "Valider",
                       onPressed: _checkAnswer,
