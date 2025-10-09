@@ -22,7 +22,7 @@ class HomePageState extends State<HomePage> {
 
   Future<void> _playBretagneAccessAudio() async {
     try {
-      await _audioPlayer.setSource(AssetSource('audio/bretagne_access.mp3'));
+      await _audioPlayer.setSource(AssetSource('audio/bretagne_access.m4a'));
       await _audioPlayer.setVolume(0.85);
       await _audioPlayer.resume();
     } catch (e) {
