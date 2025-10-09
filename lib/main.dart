@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mon_app/pages/enigme_1/enigme1_mauvaise_reponse.dart';
+import 'package:mon_app/pages/home.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_porte.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_reussite.dart';
-import 'package:mon_app/pages/home.dart';
+import 'package:mon_app/pages/enigme_1/enigme1_mauvaise_reponse.dart';
 
-
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Folklorik',
       theme: ThemeData.dark(),
-      initialRoute: '/home', // <- Démarrage normal
+      initialRoute: '/porte_enigme1',
       routes: {
         '/home': (context) => const HomePage(),
         '/porte_enigme1': (context) => const Enigme1PortePage(),
