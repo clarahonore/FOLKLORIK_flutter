@@ -82,8 +82,8 @@ class _IntroAnimationEnigme4State extends State<IntroAnimationEnigme4> with Tick
                 scale: zoom.value,
                 child: Image.asset(
                   showSecondImage
-                      ? 'assets/images/cromlech.png'
-                      : 'assets/images/pont.png',
+                      ? 'assets/images/labo_loin.png'
+                      : 'assets/images/lumiere_cromlech.png',
                   fit: BoxFit.cover,
                 ),
               );
