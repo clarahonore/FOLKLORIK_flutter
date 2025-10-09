@@ -18,7 +18,9 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
+
   bool _bretagneNarrationPlayed = false;
+  bool _accessibiliteSoundPlayed = false; // 👈 pour le double-clic accessibilité
 
   Future<void> _playBretagneAccessAudio() async {
     try {
@@ -27,6 +29,33 @@ class HomePageState extends State<HomePage> {
       await _audioPlayer.resume();
     } catch (e) {
       debugPrint("Erreur audio Bretagne Access : $e");
+    }
+  }
+
+  /// 🔊 Lecture du son "Accessibilité"
+  Future<void> _handleAccessibilite(BuildContext context, bool narrationActive) async {
+    if (narrationActive && !_accessibiliteSoundPlayed) {
+      try {
+        await _audioPlayer.stop();
+        await _audioPlayer.setVolume(1.0);
+        await _audioPlayer.setSource(AssetSource('audio/Accessibilité.m4a'));
+        await _audioPlayer.resume();
+        setState(() => _accessibiliteSoundPlayed = true);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Appuyez encore pour ouvrir les paramètres d'accessibilité..."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } catch (e) {
+        debugPrint("Erreur audio bouton Accessibilité : $e");
+      }
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AccessibilitePage()),
+      );
     }
   }
 
@@ -62,20 +91,13 @@ class HomePageState extends State<HomePage> {
               children: [
                 const SizedBox(height: 20),
 
-                // Bouton Accessibilité
+                // 👁️ Bouton Accessibilité avec double-clic audio
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AccessibilitePage(),
-                          ),
-                        );
-                      },
+                      onTap: () => _handleAccessibilite(context, access.narrationActive),
                       child: Column(
                         children: [
                           Icon(Icons.visibility, color: textColor),
@@ -116,22 +138,25 @@ class HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 60),
 
-                // Bouton Bretagne avec narration
+                // 🧭 Bouton Bretagne avec narration double-clic
                 RegionButton(
                   label: "Bretagne",
                   imagePath: 'assets/images/symbole-breton.png',
                   onPressed: () async {
                     if (access.narrationActive && !_bretagneNarrationPlayed) {
-                      // Premier clic : joue l'audio narration
                       await _playBretagneAccessAudio();
                       setState(() => _bretagneNarrationPlayed = true);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Appuyez encore pour entrer en Bretagne..."),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                     } else {
-                      // Deuxième clic ou si narration désactivée : ouvre la page Bretagne
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const BretagnePage(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const BretagnePage()),
                       );
                     }
                   },

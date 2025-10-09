@@ -14,15 +14,17 @@ class BretagnePage extends StatefulWidget {
 }
 
 class BretagnePageState extends State<BretagnePage> {
-  // 🔊 Audio principal (narration de la page)
+  // Audio principal
   late final AudioPlayer _audioPlayer;
   Duration _currentPosition = Duration.zero;
   bool _isPlaying = false;
   bool _audioInitialise = false;
 
-  // 🎵 Audio du bouton "COMMENCER"
+  // Audio des boutons
   final AudioPlayer _buttonAudioPlayer = AudioPlayer();
-  bool _buttonSoundPlayed = false; // pour gérer le double clic
+  bool _buttonSoundPlayed = false; // COMMENCER
+  bool _accessibiliteSoundPlayed = false; // ACCESSIBILITÉ
+  bool _accueilSoundPlayed = false; // ACCUEIL 👈 nouveau
 
   @override
   void initState() {
@@ -64,9 +66,9 @@ class BretagnePageState extends State<BretagnePage> {
     super.dispose();
   }
 
+  /// Bouton COMMENCER
   Future<void> _handleCommencer(BuildContext context, bool narrationActive) async {
     if (narrationActive && !_buttonSoundPlayed) {
-      // 🥇 Premier clic → joue le son du bouton
       try {
         await _buttonAudioPlayer.stop();
         await _buttonAudioPlayer.setVolume(1.0);
@@ -74,21 +76,73 @@ class BretagnePageState extends State<BretagnePage> {
         await _buttonAudioPlayer.resume();
         setState(() => _buttonSoundPlayed = true);
 
-        // Optionnel : petit retour visuel
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Appuyez encore pour continuer..."),
+            content: Text("Appuyez encore pour commencer..."),
             duration: Duration(seconds: 2),
           ),
         );
       } catch (e) {
-        debugPrint("Erreur audio bouton : $e");
+        debugPrint("Erreur audio COMMENCER : $e");
       }
     } else {
-      // 🥈 Deuxième clic → on passe à la page suivante
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const IntroAnimationEnigme1()),
+      );
+    }
+  }
+
+  /// Bouton ACCESSIBILITÉ
+  Future<void> _handleAccessibilite(BuildContext context, bool narrationActive) async {
+    if (narrationActive && !_accessibiliteSoundPlayed) {
+      try {
+        await _buttonAudioPlayer.stop();
+        await _buttonAudioPlayer.setVolume(1.0);
+        await _buttonAudioPlayer.setSource(AssetSource('audio/Accessibilité.m4a'));
+        await _buttonAudioPlayer.resume();
+        setState(() => _accessibiliteSoundPlayed = true);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Appuyez encore pour ouvrir l'accessibilité..."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } catch (e) {
+        debugPrint("Erreur audio ACCESSIBILITÉ : $e");
+      }
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AccessibilitePage()),
+      );
+    }
+  }
+
+  ///  Bouton ACCUEIL
+  Future<void> _handleAccueil(BuildContext context, bool narrationActive) async {
+    if (narrationActive && !_accueilSoundPlayed) {
+      try {
+        await _buttonAudioPlayer.stop();
+        await _buttonAudioPlayer.setVolume(1.0);
+        await _buttonAudioPlayer.setSource(AssetSource('audio/Accueil.m4a'));
+        await _buttonAudioPlayer.resume();
+        setState(() => _accueilSoundPlayed = true);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Appuyez encore pour revenir à l'accueil..."),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } catch (e) {
+        debugPrint("Erreur audio ACCUEIL : $e");
+      }
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }
@@ -97,7 +151,7 @@ class BretagnePageState extends State<BretagnePage> {
   Widget build(BuildContext context) {
     final access = context.watch<AccessibiliteStatus>();
 
-    // ⚡ Gestion du son principal
+    // Gestion du son principal
     if (access.sonActive && !_isPlaying) {
       _audioPlayer.seek(_currentPosition);
       _audioPlayer.resume();
@@ -115,7 +169,7 @@ class BretagnePageState extends State<BretagnePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          // 🖼️ Fond parchemin
+          // Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -136,14 +190,9 @@ class BretagnePageState extends State<BretagnePage> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // 🏠 Accueil
+                        // ACCUEIL avec double-clic audio
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const HomePage()),
-                            );
-                          },
+                          onTap: () => _handleAccueil(context, access.narrationActive),
                           child: Column(
                             children: [
                               Icon(Icons.home, color: textColor),
@@ -153,14 +202,10 @@ class BretagnePageState extends State<BretagnePage> {
                           ),
                         ),
                         const SizedBox(width: 20),
-                        // 👁️ Accessibilité
+
+                        // ACCESSIBILITÉ avec double-clic audio
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const AccessibilitePage()),
-                            );
-                          },
+                          onTap: () => _handleAccessibilite(context, access.narrationActive),
                           child: Column(
                             children: [
                               Icon(Icons.visibility, color: textColor),
@@ -174,7 +219,7 @@ class BretagnePageState extends State<BretagnePage> {
                   ),
                   const SizedBox(height: 40),
 
-                  // 🔹 Titre
+                  // Titre
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -209,32 +254,22 @@ class BretagnePageState extends State<BretagnePage> {
 
                   const SizedBox(height: 30),
 
-                  // 🔹 Texte principal
+                  // Texte principal
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
                         "Vous y voilà, vous êtes arrivés en terres de Brocéliande, au cœur des brumes éternelles. "
-                            "Autour de vous, les arbres se penchent comme s'ils vous observer de près. "
-                            "Et l'atmosphère sent la mousse. "
-                            "Et la magie ancienne de la forêt. "
-                            "Le vent dans ces basses contrées murmure des noms oubliés à vos oreilles. "
-                            "Tel Morgane, Arthur, Lancelot et bien d'autres. Mais dans ces murmures, un silence inquiétant grandit. "
-                            "Cependant, vous sentez qu'il manque quelque chose, ou plutôt quelqu'un. "
-                            "La mémoire du grand enchanteur s'efface. "
-                            "Enfin, que dis-je ? Merlin s'efface. "
-                            "Et si son souvenir disparaît. "
-                            "Les contes et la magie sombreront. "
-                            "Et la Bretagne oubliera sa propre légende. "
-                            "Vous n'avez que 45 minutes pour raviver son souvenir dans l'esprit de chacun avant qu'il soit trop tard. "
-                            "Ecoutez les fées déchiffrer les runes. "
-                            "Suivez les menhirs. "
-                            "Mais avant tout, préparer la potion de vitalité qui sauvera Merlin de l'oubli. "
-                            "Hâtez vous voyageurs du temps, car bientôt même son nom ne résonnera plus. "
-                            "Que la légende survive à travers vous. "
-
-                            "Et surtout bonne chance ! "
-
-                        ,
+                            "Autour de vous, les arbres se penchent comme s'ils vous observaient de près. "
+                            "Et l'atmosphère sent la mousse et la magie ancienne de la forêt. "
+                            "Le vent murmure des noms oubliés à vos oreilles : Morgane, Arthur, Lancelot... "
+                            "Mais dans ces murmures, un silence inquiétant grandit. "
+                            "La mémoire du grand enchanteur s'efface... Merlin s'efface. "
+                            "Et si son souvenir disparaît, les contes et la magie sombreront, "
+                            "et la Bretagne oubliera sa propre légende. "
+                            "Vous n'avez que 45 minutes pour raviver son souvenir avant qu'il ne soit trop tard. "
+                            "Écoutez les fées déchiffrer les runes, suivez les menhirs, "
+                            "et préparez la potion de vitalité qui sauvera Merlin de l'oubli. "
+                            "Que la légende survive à travers vous... et surtout, bonne chance !",
                         style: TextStyle(
                           fontSize: 16 * fontSizeFactor,
                           height: 1.5,
@@ -246,10 +281,10 @@ class BretagnePageState extends State<BretagnePage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // 🔘 Bouton COMMENCER
+                  // Bouton COMMENCER
                   Center(
                     child: ElevatedButton(
-                      onPressed: () => _handleCommencer(context, access.sonActive),
+                      onPressed: () => _handleCommencer(context, access.narrationActive),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                         access.contraste ? Colors.grey[800] : const Color(0xFF8B5E3C),
