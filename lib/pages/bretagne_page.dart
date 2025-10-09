@@ -15,17 +15,17 @@ class BretagnePage extends StatefulWidget {
 }
 
 class BretagnePageState extends State<BretagnePage> {
-  // Audio principal
+  // 🎵 Audio principal
   late final AudioPlayer _audioPlayer;
   Duration _currentPosition = Duration.zero;
   bool _isPlaying = false;
   bool _audioInitialise = false;
 
-  // Audio des boutons
+  // 🔊 Audio pour les boutons
   final AudioPlayer _buttonAudioPlayer = AudioPlayer();
-  bool _buttonSoundPlayed = false; // COMMENCER
-  bool _accessibiliteSoundPlayed = false; // ACCESSIBILITÉ
-  bool _accueilSoundPlayed = false; // ACCUEIL 👈 nouveau
+  bool _buttonSoundPlayed = false;
+  bool _accessibiliteSoundPlayed = false;
+  bool _accueilSoundPlayed = false;
 
   @override
   void initState() {
@@ -67,92 +67,61 @@ class BretagnePageState extends State<BretagnePage> {
     super.dispose();
   }
 
-  /// Bouton COMMENCER
-  Future<void> _handleCommencer(BuildContext context, bool narrationActive) async {
-    if (narrationActive && !_buttonSoundPlayed) {
+  // 🎧 Gestion des sons de boutons
+  Future<void> _playButtonSound(String asset, VoidCallback action, bool narrationFlag) async {
+    if (narrationFlag) {
       try {
         await _buttonAudioPlayer.stop();
         await _buttonAudioPlayer.setVolume(1.0);
-        await _buttonAudioPlayer.setSource(AssetSource('audio/Commencer.m4a'));
+        await _buttonAudioPlayer.setSource(AssetSource(asset));
         await _buttonAudioPlayer.resume();
-        setState(() => _buttonSoundPlayed = true);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Appuyez encore pour commencer..."),
-            duration: Duration(seconds: 2),
-          ),
-        );
       } catch (e) {
-        debugPrint("Erreur audio COMMENCER : $e");
+        debugPrint("Erreur audio bouton ($asset) : $e");
       }
     } else {
-      Navigator.pushReplacement(
+      action();
+    }
+  }
+
+  // 🏁 Actions des boutons
+  Future<void> _handleCommencer(BuildContext context, bool narrationActive) async {
+    await _playButtonSound(
+      'audio/Commencer.m4a',
+          () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const IntroAnimationEnigme1()),
-      );
-    }
+      ),
+      narrationActive,
+    );
   }
 
-  /// Bouton ACCESSIBILITÉ
   Future<void> _handleAccessibilite(BuildContext context, bool narrationActive) async {
-    if (narrationActive && !_accessibiliteSoundPlayed) {
-      try {
-        await _buttonAudioPlayer.stop();
-        await _buttonAudioPlayer.setVolume(1.0);
-        await _buttonAudioPlayer.setSource(AssetSource('audio/Accessibilité.m4a'));
-        await _buttonAudioPlayer.resume();
-        setState(() => _accessibiliteSoundPlayed = true);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Appuyez encore pour ouvrir l'accessibilité..."),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } catch (e) {
-        debugPrint("Erreur audio ACCESSIBILITÉ : $e");
-      }
-    } else {
-      Navigator.push(
+    await _playButtonSound(
+      'audio/Accessibilité.m4a',
+          () => Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AccessibilitePage()),
-      );
-    }
+      ),
+      narrationActive,
+    );
   }
 
-  ///  Bouton ACCUEIL
   Future<void> _handleAccueil(BuildContext context, bool narrationActive) async {
-    if (narrationActive && !_accueilSoundPlayed) {
-      try {
-        await _buttonAudioPlayer.stop();
-        await _buttonAudioPlayer.setVolume(1.0);
-        await _buttonAudioPlayer.setSource(AssetSource('audio/Accueil.m4a'));
-        await _buttonAudioPlayer.resume();
-        setState(() => _accueilSoundPlayed = true);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Appuyez encore pour revenir à l'accueil..."),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } catch (e) {
-        debugPrint("Erreur audio ACCUEIL : $e");
-      }
-    } else {
-      Navigator.pushReplacement(
+    await _playButtonSound(
+      'audio/Accueil.m4a',
+          () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    }
+      ),
+      narrationActive,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final access = context.watch<AccessibiliteStatus>();
 
-    // Gestion du son principal
+    // 🔊 Gestion du son principal selon accessibilité
     if (access.sonActive && !_isPlaying) {
       _audioPlayer.seek(_currentPosition);
       _audioPlayer.resume();
@@ -170,7 +139,7 @@ class BretagnePageState extends State<BretagnePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          // Fond parchemin
+          // 🧾 Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -179,19 +148,19 @@ class BretagnePageState extends State<BretagnePage> {
               ),
             ),
           ),
+
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 🔹 Boutons Accueil + Accessibilité
+                  // 🧭 Boutons Accueil + Accessibilité
                   Align(
                     alignment: Alignment.topRight,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // ACCUEIL avec double-clic audio
                         GestureDetector(
                           onTap: () => _handleAccueil(context, access.narrationActive),
                           child: Column(
@@ -203,8 +172,6 @@ class BretagnePageState extends State<BretagnePage> {
                           ),
                         ),
                         const SizedBox(width: 20),
-
-                        // ACCESSIBILITÉ avec double-clic audio
                         GestureDetector(
                           onTap: () => _handleAccessibilite(context, access.narrationActive),
                           child: Column(
@@ -218,9 +185,10 @@ class BretagnePageState extends State<BretagnePage> {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 40),
 
-                  // Titre
+                  // 🪶 Titre
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -255,7 +223,7 @@ class BretagnePageState extends State<BretagnePage> {
 
                   const SizedBox(height: 30),
 
-                  // Texte principal
+                  // 📜 Texte narratif
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
@@ -280,42 +248,14 @@ class BretagnePageState extends State<BretagnePage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
 
-                  // 🔸 Ici on remplace ton bouton par le widget global
-
-                  // Bouton COMMENCER
+                  // 🔸 Bouton COMMENCER stylé
                   Center(
                     child: AppButton(
                       text: "COMMENCER",
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const IntroAnimationEnigme1(),
-                          ),
-                        );
-                      },
-                    child: ElevatedButton(
                       onPressed: () => _handleCommencer(context, access.narrationActive),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                        access.contraste ? Colors.grey[800] : const Color(0xFF8B5E3C),
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: Text(
-                        "COMMENCER",
-                        style: TextStyle(
-                          fontSize: 18 * fontSizeFactor,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
                   ),
 
