@@ -15,6 +15,11 @@
     audioplayers: ^6.5.1
     just_audio: ^0.10.5
     provider: ^6.1.2
+    speech_to_text: ^7.0.0
+    flutter_tts: ^4.0.0
+    dart_openai: ^5.1.0
+    flutter_dotenv: ^5.1.0
+
   dev_dependencies:
     flutter_test:
       sdk: flutter

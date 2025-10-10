@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:dart_openai/dart_openai.dart';
+
 import 'package:mon_app/pages/intro_folklorik.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_mauvaise_reponse.dart';
 import 'package:mon_app/pages/enigme_1/enigme1_porte.dart';
@@ -9,7 +12,13 @@ import 'package:mon_app/pages/bretagne_page.dart';
 import 'package:mon_app/pages/accessibilite_page.dart';
 import 'package:mon_app/services/accessibilite_status.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+
+  OpenAI.apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+  OpenAI.requestsTimeOut = const Duration(seconds: 40);
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AccessibiliteStatus(),
@@ -23,10 +32,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Récupère les paramètres d’accessibilité globaux
     final access = context.watch<AccessibiliteStatus>();
 
-    // Choix du thème selon le contraste
     final theme = access.contraste
         ? ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.highContrastDark(),

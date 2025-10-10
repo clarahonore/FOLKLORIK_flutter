@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:mon_app/services/merlin_service.dart';
 import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
 import '../../widgets/app_button.dart';
@@ -14,11 +16,14 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
-
   final TextEditingController _controllerText = TextEditingController();
+  final TextEditingController _merlinController = TextEditingController();
+
+  final FlutterTts _flutterTts = FlutterTts();
 
   bool showSecondImage = false;
   bool showInstructions = false;
+  String merlinResponse = "";
 
   @override
   void initState() {
@@ -29,13 +34,21 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
       vsync: this,
     )..repeat(reverse: true);
 
-    _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+    _opacityAnimation =
+        Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+
+    _flutterTts.setLanguage("fr-FR");
+    _flutterTts.setVoice({"name": "fr-fr-x-frd-local", "locale": "fr-FR"});
+    _flutterTts.setPitch(0.8);
+    _flutterTts.setSpeechRate(0.9);
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _controllerText.dispose();
+    _merlinController.dispose();
+    _flutterTts.stop();
     super.dispose();
   }
 
@@ -68,6 +81,26 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
     }
   }
 
+  Future<void> _askMerlin(String question) async {
+    setState(() => merlinResponse = "Merlin réfléchit...");
+    final answer = await MerlinService.askMerlin("""
+Tu es MERLIN, le grand enchanteur.
+Les joueurs sont face à la première énigme de la porte runique.
+Ils doivent trouver deux mots cachés : "source viviane".
+Voici le contexte :
+- Des symboles celtiques et naturels (fleurs, feu, montagne...) représentent des lettres.
+- Certains symboles sont répétés : cela signifie la même lettre.
+- Le premier mot fait référence à un élément d'eau.
+- Le second à un nom propre lié à la forêt de Brocéliande.
+Réponds de manière roleplay et progressive : d’abord un indice simple, puis plus précis si on insiste.
+
+Le joueur te dit : "$question"
+""");
+
+    setState(() => merlinResponse = answer);
+    await _flutterTts.speak(answer);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +116,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               fit: BoxFit.cover,
             ),
           ),
+
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -93,28 +127,34 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                    shadows: [
+                      Shadow(blurRadius: 10, color: Colors.black),
+                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
+
           const Positioned(
             top: 40,
             right: 30,
             child: TimerButton(),
           ),
+
           const Positioned(
             top: 200,
             left: 16,
             child: DevBackHomeButton(),
           ),
+
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -130,7 +170,8 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       const SizedBox(height: 16),
                       const Text(
                         "Avec les galets que vous trouverez sur la table devant vous, trouvez le code secret pour déverrouiller la porte.",
-                        style: TextStyle(fontSize: 16, color: Colors.white, height: 1.4),
+                        style: TextStyle(
+                            fontSize: 16, color: Colors.white, height: 1.4),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
@@ -143,6 +184,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 ),
               ),
             ),
+
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -153,16 +195,20 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 child: const Icon(Icons.info_outline),
               ),
             ),
+
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 80.0, left: 24.0, right: 24.0),
+                padding: const EdgeInsets.only(
+                    bottom: 60.0, left: 24.0, right: 24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Zone de saisie du mot de passe
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(12),
@@ -182,6 +228,56 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       text: "Valider",
                       onPressed: _checkAnswer,
                     ),
+                    const SizedBox(height: 24),
+
+                    // === Zone d’assistance IA Merlin ===
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Besoin d’un coup de main de Merlin ?",
+                            style: TextStyle(
+                                color: Colors.white70, fontSize: 14),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _merlinController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Parle à Merlin...',
+                              hintStyle: TextStyle(color: Colors.white54),
+                              border: InputBorder.none,
+                            ),
+                            onSubmitted: (value) {
+                              if (value.isNotEmpty) {
+                                _askMerlin(value);
+                                _merlinController.clear();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (merlinResponse.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          merlinResponse,
+                          style: const TextStyle(
+                              color: Colors.white, fontStyle: FontStyle.italic),
+                        ),
+                      ),
                   ],
                 ),
               ),
