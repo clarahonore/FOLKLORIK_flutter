@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../services/game_timer_service.dart';
+import 'LaboEnigme.dart';
 
 class IntroAnimationEnigme4 extends StatefulWidget {
   const IntroAnimationEnigme4({super.key});
@@ -25,8 +26,8 @@ class _IntroAnimationEnigme4State extends State<IntroAnimationEnigme4> with Tick
 
     GameTimerService().start();
 
-    _audioPlayer = AudioPlayer();
-    _audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
+    //_audioPlayer = AudioPlayer();
+    //_audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
 
     _zoomController1 = AnimationController(
       vsync: this,
@@ -48,6 +49,16 @@ class _IntroAnimationEnigme4State extends State<IntroAnimationEnigme4> with Tick
       setState(() => showSecondImage = true);
       _zoomController2.forward();
       await _flashController.reverse();
+    });
+
+    Future.delayed(const Duration(seconds: 16), () {
+      if (!hasNavigated) {
+        hasNavigated = true;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LaboEnigme()),
+        );
+      }
     });
   }
 

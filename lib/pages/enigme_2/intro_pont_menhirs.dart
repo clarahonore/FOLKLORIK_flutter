@@ -26,8 +26,8 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme2> with Tick
 
     GameTimerService().start();
 
-    _audioPlayer = AudioPlayer();
-    _audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
+    //_audioPlayer = AudioPlayer();
+    //_audioPlayer.play(AssetSource('audio/intro_bretagne.mp3'));
 
     _zoomController1 = AnimationController(
       vsync: this,
