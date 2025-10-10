@@ -77,7 +77,6 @@ class HomePageState extends State<HomePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          // 🧾 Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -92,7 +91,6 @@ class HomePageState extends State<HomePage> {
               children: [
                 const SizedBox(height: 20),
 
-                // 👁️ Bouton Accessibilité
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -112,10 +110,8 @@ class HomePageState extends State<HomePage> {
 
                 const SizedBox(height: 80),
 
-                // 🪶 TITRE avec STROKE cuivre
                 Stack(
                   children: [
-                    // Contour cuivre (stroke)
                     Text(
                       "FOLKLORIK",
                       style: GoogleFonts.podkova(
@@ -130,7 +126,6 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    // Remplissage intérieur
                     Text(
                       "FOLKLORIK",
                       style: GoogleFonts.podkova(
@@ -158,7 +153,6 @@ class HomePageState extends State<HomePage> {
 
                 const SizedBox(height: 60),
 
-                // 🌿 Bouton BRETAGNE stylisé
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: GestureDetector(
@@ -187,8 +181,8 @@ class HomePageState extends State<HomePage> {
                           center: Alignment(-0.3, -0.4),
                           radius: 1.2,
                           colors: [
-                            Color(0xFFBF8038), // cuivre
-                            Color(0xFF593C1A), // brun profond
+                            Color(0xFFBF8038),
+                            Color(0xFF593C1A),
                           ],
                           stops: [0.42, 1.0],
                         ),

@@ -26,32 +26,30 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
   void initState() {
     super.initState();
 
-    // Démarre le timer global
+    // Démarre le chrono de jeu
     GameTimerService().start();
 
-    // Lance la musique
+    // Lance la musique d’intro
     _audioPlayer = AudioPlayer();
     _audioPlayer.play(AssetSource('audio/cabane_reveil.m4a'));
 
-    // Animation de zoom image 1
+    // Contrôleurs d’animation
     _zoomController1 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 23),
     )..forward();
 
-    // Animation de zoom image 2
     _zoomController2 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 54),
     );
 
-    // Animation de flash
     _flashController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
 
-    // Changement d’image après 8s
+    // Transition entre les deux images
     Future.delayed(const Duration(seconds: 23), () async {
       await _flashController.forward();
       setState(() => showSecondImage = true);
@@ -59,7 +57,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
       await _flashController.reverse();
     });
 
-    // Redirection après 16s
+    // Fin de l’intro → redirection automatique
     Future.delayed(const Duration(seconds: 77), () {
       if (!hasNavigated) {
         hasNavigated = true;
@@ -95,7 +93,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Zoom sur image 1 ou 2
+          // Animation du zoom
           AnimatedBuilder(
             animation: zoom,
             builder: (context, child) {
@@ -111,7 +109,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
             },
           ),
 
-          // Flash blanc de transition
+          // Flash lumineux entre les deux images
           AnimatedBuilder(
             animation: flashOpacity,
             builder: (context, child) {
@@ -119,43 +117,6 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
                 color: Colors.white.withOpacity(flashOpacity.value),
               );
             },
-          ),
-
-          // Bouton "PASSER INTRO"
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 40),
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (!hasNavigated) {
-                    hasNavigated = true;
-                    await _audioPlayer.stop();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'PASSER INTRO',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),

@@ -23,10 +23,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Récupère les paramètres d’accessibilité globaux
     final access = context.watch<AccessibiliteStatus>();
 
-    // Choix du thème selon le contraste
     final theme = access.contraste
         ? ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.highContrastDark(),

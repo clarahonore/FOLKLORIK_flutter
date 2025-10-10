@@ -40,11 +40,11 @@ class AppButton extends StatelessWidget {
             shape: isIconOnly ? BoxShape.circle : BoxShape.rectangle,
             borderRadius: isIconOnly ? null : BorderRadius.circular(14),
             gradient: const RadialGradient(
-              center: Alignment(-0.3, -0.4), // léger décalage pour la lumière
+              center: Alignment(-0.3, -0.4),
               radius: 1.2,
               colors: [
-                Color(0xFFBF8038), // cuivre lumineux
-                Color(0xFF593C1A), // brun profond
+                Color(0xFFBF8038),
+                Color(0xFF593C1A),
               ],
               stops: [0.42, 1.0],
             ),

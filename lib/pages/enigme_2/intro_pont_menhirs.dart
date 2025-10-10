@@ -35,7 +35,6 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
     _audioBois = AudioPlayer();
     _audioVent = AudioPlayer();
 
-
     _zoomController1 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 8),
@@ -51,14 +50,12 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
       duration: const Duration(milliseconds: 600),
     );
 
-
     Future.delayed(const Duration(seconds: 8), () async {
       await _flashController.forward();
       setState(() => showSecondImage = true);
       _zoomController2.forward();
       await _flashController.reverse();
     });
-
 
     Future.delayed(const Duration(seconds: 16), () {
       if (!hasNavigated) {
@@ -72,7 +69,6 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
     });
   }
 
-  //Joue un son en boucle
   Future<void> _playLoopingAudio(AudioPlayer player, String path) async {
     try {
       await player.setReleaseMode(ReleaseMode.loop);
@@ -84,19 +80,16 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
     }
   }
 
-
   Future<void> _stopAllAudio() async {
     await _audioBois.stop();
     await _audioVent.stop();
     _audioPlaying = false;
   }
 
-
   Future<void> _updateAudio(bool sonActif) async {
     if (sonActif && !_audioPlaying) {
       _audioPlaying = true;
       await _playLoopingAudio(_audioBois, 'audio/déplacement dans les bois.mp3');
-
     } else if (!sonActif && _audioPlaying) {
       await _stopAllAudio();
     }
@@ -116,8 +109,6 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
   @override
   Widget build(BuildContext context) {
     final access = context.watch<AccessibiliteStatus>();
-
-    // Vérifie l’état du son
     _updateAudio(access.sonActive);
 
     final zoom = Tween<double>(begin: 1.0, end: 1.1).animate(
@@ -155,43 +146,6 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
                 color: Colors.white.withOpacity(flashOpacity.value),
               );
             },
-          ),
-
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 40),
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (!hasNavigated) {
-                    hasNavigated = true;
-                    await _stopAllAudio();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const MenhirsEnigme()),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Passer Scène',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
