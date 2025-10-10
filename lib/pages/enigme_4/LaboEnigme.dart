@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
 import '../../widgets/dev_back_home_button.dart';
+import '../fin/fin_animation.dart';
 import 'intro_labo_druide.dart';
 
 class LaboEnigme extends StatefulWidget {
@@ -133,7 +134,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     if (mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const IntroAnimationEnigme4()),
+        MaterialPageRoute(builder: (_) => const FinAnimationPage()),
       );
     }
   }
