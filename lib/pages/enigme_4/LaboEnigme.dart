@@ -23,6 +23,9 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images/a.png',
     'assets/images/b.png',
     'assets/images/c.png',
+    'assets/images/D.png',
+    'assets/images/E.png',
+    'assets/images/F.png'
   ];
 
   final List<String> correctOrder = [
@@ -31,8 +34,8 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images/a.png',
   ];
 
-  List<String?> chosenSymbols = List.filled(3, null);
-  List<bool> disabled = List.filled(3, false);
+  List<String?> chosenSymbols = List.filled(6, null);
+  List<bool> disabled = List.filled(6, false);
 
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
@@ -89,7 +92,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   void resetSymbols() {
     setState(() {
       chosenSymbols = List.filled(3, null);
-      disabled = List.filled(3, false);
+      disabled = List.filled(6, false);
     });
   }
 
@@ -282,7 +285,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(3, (index) {
+                      children: List.generate(6, (index) {
                         return GestureDetector(
                           onTap: disabled[index]
                               ? null
