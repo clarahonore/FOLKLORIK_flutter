@@ -1,8 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../services/game_timer_service.dart';
-
-
+import '../pages/fin/fin_echec.dart';
 
 class TimerButton extends StatefulWidget {
   const TimerButton({super.key});
@@ -26,6 +25,16 @@ class _TimerButtonState extends State<TimerButton> {
     setState(() {
       _remaining = duration;
     });
+
+    if (duration.inSeconds <= 0 && mounted) {
+      if (_timerService.isRunning) _timerService.toggle();
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const FinEchecPage()),
+        );
+      });
+    }
   }
 
   @override
@@ -76,7 +85,10 @@ class _TimerButtonState extends State<TimerButton> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 60,
+                          vertical: 16,
+                        ),
                       ),
                       child: Text(
                         _timerService.isRunning ? 'STOP' : 'REPRENDRE',
