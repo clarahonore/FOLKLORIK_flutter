@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
-import '../../widgets/dev_back_home_button.dart';
 import '../fin/fin_animation.dart';
 import 'intro_labo_druide.dart';
 
@@ -54,7 +53,9 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
       vsync: this,
     );
     _shakeAnimation =
-        Tween<double>(begin: 0, end: 10).chain(CurveTween(curve: Curves.elasticIn)).animate(_shakeController);
+        Tween<double>(begin: 0, end: 10)
+            .chain(CurveTween(curve: Curves.elasticIn))
+            .animate(_shakeController);
   }
 
   @override
@@ -83,7 +84,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
       disabled[index] = true;
     });
 
-    // Vérification remplissage case
+    // Vérification du remplissage
     if (!chosenSymbols.contains(null)) {
       _checkOrder();
     }
@@ -97,7 +98,8 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   }
 
   Future<void> _checkOrder() async {
-    final isCorrect = List.generate(3, (i) => chosenSymbols[i] == correctOrder[i])
+    final isCorrect = List.generate(
+        3, (i) => chosenSymbols[i] == correctOrder[i])
         .every((e) => e == true);
 
     if (isCorrect) {
@@ -133,7 +135,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     );
 
     await Future.delayed(const Duration(seconds: 5));
-    if (mounted) Navigator.pop(context); // ferme popup
+    if (mounted) Navigator.pop(context);
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -154,7 +156,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // === Image de fond ===
+          // --- Image de fond ---
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -165,6 +167,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
             ),
           ),
 
+          // --- Message d’intro ---
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -182,9 +185,10 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
               ),
             ),
 
+          // --- Chronomètre ---
           const TimerButton(),
-          const DevBackHomeButton(),
 
+          // --- Instructions ---
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
@@ -223,7 +227,10 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                         ),
                         child: const Text(
                           "Passer à l'énigme",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -232,7 +239,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
               ),
             ),
 
-          // === Bouton info ===
+          // --- Bouton info ---
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -244,7 +251,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
               ),
             ),
 
-          // === Zone symboles ===
+          // --- Zone d’interaction des symboles ---
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
@@ -282,14 +289,12 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                       ),
                     ),
                     const SizedBox(height: 16),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(6, (index) {
                         return GestureDetector(
-                          onTap: disabled[index]
-                              ? null
-                              : () => onSymbolTap(index),
+                          onTap:
+                          disabled[index] ? null : () => onSymbolTap(index),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Stack(
@@ -303,12 +308,13 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                                 ),
                                 if (disabled[index])
                                   BackdropFilter(
-                                    filter:
-                                    ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 3, sigmaY: 3),
                                     child: Container(
                                       width: 60,
                                       height: 60,
-                                      color: Colors.black.withOpacity(0.4),
+                                      color:
+                                      Colors.black.withOpacity(0.4),
                                     ),
                                   ),
                               ],
@@ -325,8 +331,10 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 12),
                       ),
-                      child: const Text("Réinitialiser",
-                          style: TextStyle(color: Colors.white)),
+                      child: const Text(
+                        "Réinitialiser",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

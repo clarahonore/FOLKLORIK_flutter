@@ -16,7 +16,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
   late AnimationController _fadeController;
   late AnimationController _textFadeController;
 
-  late final AudioPlayer _audioPlayer; // 🎵 Audio au démarrage
+  late final AudioPlayer _audioPlayer;
 
   bool showPorteOuverte = false;
   bool showBlackScreen = false;
@@ -25,7 +25,6 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
   void initState() {
     super.initState();
 
-    // 🎵 Lancer l'audio dès l'ouverture de la page
     _audioPlayer = AudioPlayer();
     _audioPlayer.play(AssetSource('audio/porte en bois.m4a'));
 
@@ -74,7 +73,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
     _zoomController.dispose();
     _fadeController.dispose();
     _textFadeController.dispose();
-    _audioPlayer.dispose(); // 🚨 Important pour libérer la ressource audio
+    _audioPlayer.dispose();
     super.dispose();
   }
 

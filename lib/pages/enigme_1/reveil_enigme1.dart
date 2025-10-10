@@ -4,7 +4,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/timer_button.dart';
-import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/app_button.dart';
 import '../../services/accessibilite_status.dart';
 import 'enigme1_porte.dart';
@@ -22,14 +21,12 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
-
   final AudioPlayer _buttonAudioPlayer = AudioPlayer();
   bool _buttonSoundPlayed = false;
 
   @override
   void initState() {
     super.initState();
-
 
     _fadeController = AnimationController(
       vsync: this,
@@ -39,7 +36,6 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
       parent: _fadeController,
       curve: Curves.easeIn,
     );
-
 
     Timer(const Duration(seconds: 3), () {
       setState(() => _showButton = true);
@@ -53,7 +49,6 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
     _buttonAudioPlayer.dispose();
     super.dispose();
   }
-
 
   Future<void> _handleSortirCabane(BuildContext context, bool narrationActive) async {
     if (narrationActive && !_buttonSoundPlayed) {
@@ -88,7 +83,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
     return Scaffold(
       body: Stack(
         children: [
-
+          // 🌅 Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -101,7 +96,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           SafeArea(
             child: Column(
               children: [
-
+                // 🌙 Menu icône (non utilisé mais gardé si utile plus tard)
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -113,15 +108,12 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                   ),
                 ),
 
-
+                // ⏱️ Chronomètre
                 const TimerButton(),
 
                 const Spacer(),
 
-
-                const DevBackHomeButton(),
-
-
+                // 🚪 Bouton “Sortir de la cabane”
                 if (_showButton)
                   FadeTransition(
                     opacity: _fadeAnimation,

@@ -27,7 +27,7 @@ class GameTimerService {
       } else {
         timer.cancel();
         isRunning = false;
-        _notifyListeners(); // 🔔 informe TimerButton que c’est fini
+        _notifyListeners();
       }
     });
   }
@@ -41,14 +41,12 @@ class GameTimerService {
     }
   }
 
-  // 🛑 Ajout : stop() (appelé quand le temps est fini ou manuellement)
   void stop() {
     _timer?.cancel();
     isRunning = false;
     _notifyListeners();
   }
 
-  // 🔁 Ajout : reset() pour redémarrer le chrono
   void reset() {
     stop();
     remainingTime = Duration(minutes: _initialMinutes);
