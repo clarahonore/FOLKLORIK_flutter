@@ -133,7 +133,7 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
     );
 
     await Future.delayed(const Duration(seconds: 5));
-    if (mounted) Navigator.pop(context); // ferme popup
+    if (mounted) Navigator.pop(context);
     if (mounted) {
       Navigator.pushReplacement(
         context,
