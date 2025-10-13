@@ -34,7 +34,6 @@ class MerlinVoice {
       recognized = val.recognizedWords;
     });
 
-    // attend 5 secondes d'écoute puis stop
     await Future.delayed(const Duration(seconds: 5));
     await _speech.stop();
 
