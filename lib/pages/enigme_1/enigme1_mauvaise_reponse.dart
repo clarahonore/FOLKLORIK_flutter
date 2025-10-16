@@ -63,7 +63,7 @@ class _Enigme1MauvaiseReponseState extends State<Enigme1MauvaiseReponse>
               return Transform.scale(
                 scale: _zoomController.value,
                 child: Image.asset(
-                  'assets/images/enigme1_poignet_de_porte.png',
+                  'assets/images_fond/enigme1_poignet_de_porte.png',
                   fit: BoxFit.cover,
                 ),
               );

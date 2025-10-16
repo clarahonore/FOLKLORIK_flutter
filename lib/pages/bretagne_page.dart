@@ -173,7 +173,7 @@ class BretagnePageState extends State<BretagnePage> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/parchemin.png'),
+                  image: AssetImage('assets/images_logo/parchemin.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -217,7 +217,7 @@ class BretagnePageState extends State<BretagnePage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset('assets/images/symbole-breton.png', height: 50),
+                        Image.asset('assets/images_logo/symbole-breton.png', height: 50),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(

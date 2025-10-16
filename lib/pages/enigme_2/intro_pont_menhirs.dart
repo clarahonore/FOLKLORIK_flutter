@@ -15,7 +15,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme2> with Tick
   late final AnimationController _zoomController1;
   late final AnimationController _zoomController2;
   late final AnimationController _flashController;
-  late final AudioPlayer _audioPlayer;
+  //late final AudioPlayer _audioPlayer;
 
   bool showSecondImage = false;
   bool hasNavigated = false;
@@ -67,7 +67,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme2> with Tick
     _zoomController1.dispose();
     _zoomController2.dispose();
     _flashController.dispose();
-    _audioPlayer.dispose();
+    //_audioPlayer.dispose();
     super.dispose();
   }
 
@@ -93,8 +93,8 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme2> with Tick
                 scale: zoom.value,
                 child: Image.asset(
                   showSecondImage
-                      ? 'assets/images/cromlech.png'
-                      : 'assets/images/pont.png',
+                      ? 'assets/images_fond/cromlech.png'
+                      : 'assets/images_fond/pont.png',
                   fit: BoxFit.cover,
                 ),
               );
@@ -118,7 +118,7 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme2> with Tick
                 onPressed: () async {
                   if (!hasNavigated) {
                     hasNavigated = true;
-                    await _audioPlayer.stop();
+                    //await _audioPlayer.stop();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (_) => const MenhirsEnigme()),

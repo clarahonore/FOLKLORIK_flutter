@@ -78,7 +78,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
           const DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/parchemin.png'),
+                image: AssetImage('assets/images_logo/parchemin.png'),
                 fit: BoxFit.cover,
               ),
             ),

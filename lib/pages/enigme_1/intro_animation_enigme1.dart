@@ -103,8 +103,8 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
                 scale: zoom.value,
                 child: Image.asset(
                   showSecondImage
-                      ? 'assets/images/intro2.png'
-                      : 'assets/images/intro1.png',
+                      ? 'assets/images_fond/intro2.png'
+                      : 'assets/images_fond/intro1.png',
                   fit: BoxFit.cover,
                 ),
               );
