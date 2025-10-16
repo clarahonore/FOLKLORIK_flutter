@@ -19,18 +19,18 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   bool showInstructions = false;
 
   final List<String> symbols = [
-    'assets/images/a.png',
-    'assets/images/b.png',
-    'assets/images/c.png',
-    'assets/images/D.png',
-    'assets/images/E.png',
-    'assets/images/F.png'
+    'assets/images_enigme/a.png',
+    'assets/images_enigme/b.png',
+    'assets/images_enigme/c.png',
+    'assets/images_enigme/D.png',
+    'assets/images_enigme/E.png',
+    'assets/images_enigme/F.png'
   ];
 
   final List<String> correctOrder = [
-    'assets/images/b.png',
-    'assets/images/c.png',
-    'assets/images/a.png',
+    'assets/images_enigme/b.png',
+    'assets/images_enigme/c.png',
+    'assets/images_enigme/a.png',
   ];
 
   List<String?> chosenSymbols = List.filled(6, null);
@@ -161,8 +161,8 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
               showSecondImage
-                  ? 'assets/images/fiole.png'
-                  : 'assets/images/labo_loin.png',
+                  ? 'assets/images_fond/fiole.png'
+                  : 'assets/images_fond/labo_loin.png',
               fit: BoxFit.cover,
             ),
           ),

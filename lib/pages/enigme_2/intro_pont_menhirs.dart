@@ -131,8 +131,8 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
                 scale: zoom.value,
                 child: Image.asset(
                   showSecondImage
-                      ? 'assets/images/cromlech.png'
-                      : 'assets/images/pont.png',
+                      ? 'assets/images_fond/cromlech.png'
+                      : 'assets/images_fond/pont.png',
                   fit: BoxFit.cover,
                 ),
               );
@@ -146,6 +146,41 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
                 color: Colors.white.withOpacity(flashOpacity.value),
               );
             },
+          ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (!hasNavigated) {
+                    hasNavigated = true;
+                    //await _audioPlayer.stop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MenhirsEnigme()),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Passer Scène',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

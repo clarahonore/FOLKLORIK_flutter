@@ -91,7 +91,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
                 return Transform.scale(
                   scale: _zoomController.value,
                   child: Image.asset(
-                    'assets/images/enigme1_poignet_de_porte.png',
+                    'assets/images_fond/enigme1_poignet_de_porte.png',
                     fit: BoxFit.cover,
                   ),
                 );
@@ -103,7 +103,7 @@ class _Enigme1ReussiteState extends State<Enigme1Reussite>
               duration: const Duration(seconds: 1),
               opacity: 1,
               child: Image.asset(
-                'assets/images/enigme1_porte_ouverte.png',
+                'assets/images_fond/enigme1_porte_ouverte.png',
                 fit: BoxFit.cover,
               ),
             ),
