@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'reveil_enigme1.dart';
+import '../home.dart';
 
 class IntroApres1erEnigme extends StatefulWidget {
   const IntroApres1erEnigme({super.key});
@@ -52,23 +53,57 @@ class _IntroApres1erEnigmeState extends State<IntroApres1erEnigme>
     final zoom = Tween<double>(begin: 1.0, end: 1.15).animate(_zoomController);
 
     return Scaffold(
-      body: SizedBox.expand(
-        child: ClipRect(
-          child: AnimatedBuilder(
-            animation: zoom,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: zoom.value,
-                child: SizedBox.expand(
-                  child: Image.asset(
-                    'assets/images_fond/intro2.png',
-                    fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          // ✅ Image plein écran avec zoom
+          SizedBox.expand(
+            child: ClipRect(
+              child: AnimatedBuilder(
+                animation: zoom,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: zoom.value,
+                    child: SizedBox.expand(
+                      child: Image.asset(
+                        'assets/images_fond/intro2.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // ✅ Bouton développeur visible uniquement si isDevMode = true
+          if (isDevMode)
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              );
-            },
-          ),
-        ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text(
+                  "Page suivante (Dev)",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  _audioPlayer.stop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
+                  );
+                },
+              ),
+            ),
+        ],
       ),
     );
   }
