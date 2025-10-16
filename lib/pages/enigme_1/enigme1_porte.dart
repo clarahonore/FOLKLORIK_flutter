@@ -78,8 +78,8 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
               showSecondImage
-                  ? 'assets/images/porte_inscription_proche.png'
-                  : 'assets/images/porte_inscription_loin.png',
+                  ? 'assets/images_fond/porte_inscription_proche.png'
+                  : 'assets/images_fond/porte_inscription_loin.png',
               fit: BoxFit.cover,
             ),
           ),

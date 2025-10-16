@@ -18,19 +18,19 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
   bool showInstructions = false;
 
   final List<String> symbols = [
-    'assets/images/eau.png',
-    'assets/images/feu.png',
-    'assets/images/montagne.png',
-    'assets/images/fleur.png',
-    'assets/images/vent.png',
+    'assets/images_enigme/eau.png',
+    'assets/images_enigme/feu.png',
+    'assets/images_enigme/montagne.png',
+    'assets/images_enigme/fleur.png',
+    'assets/images_enigme/vent.png',
   ];
 
   final List<String> correctOrder = [
-    'assets/images/eau.png',
-    'assets/images/montagne.png',
-    'assets/images/vent.png',
-    'assets/images/feu.png',
-    'assets/images/fleur.png',
+    'assets/images_enigme/eau.png',
+    'assets/images_enigme/montagne.png',
+    'assets/images_enigme/vent.png',
+    'assets/images_enigme/feu.png',
+    'assets/images_enigme/fleur.png',
   ];
 
   List<String?> chosenSymbols = List.filled(5, null);
@@ -156,8 +156,8 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
               showSecondImage
-                  ? 'assets/images/cromlech.png'
-                  : 'assets/images/cromlech.png',
+                  ? 'assets/images_fond/cromlech.png'
+                  : 'assets/images_fond/cromlech.png',
               fit: BoxFit.cover,
             ),
           ),

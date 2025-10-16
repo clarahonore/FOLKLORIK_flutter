@@ -19,19 +19,19 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
   bool showInstructions = false;
 
   final List<String> symbols = [
-    'assets/images/fleur.png',
-    'assets/images/feu.png',
-    'assets/images/eau.png',
-    'assets/images/vent.png',
-    'assets/images/montagne.png',
+    'assets/images_enigme/fleur.png',
+    'assets/images_enigme/feu.png',
+    'assets/images_enigme/eau.png',
+    'assets/images_enigme/vent.png',
+    'assets/images_enigme/montagne.png',
   ];
 
   final List<String> correctOrder = [
-    'assets/images/montagne.png',
-    'assets/images/feu.png',
-    'assets/images/vent.png',
-    'assets/images/fleur.png',
-    'assets/images/eau.png',
+    'assets/images_enigme/montagne.png',
+    'assets/images_enigme/feu.png',
+    'assets/images_enigme/vent.png',
+    'assets/images_enigme/fleur.png',
+    'assets/images_enigme/eau.png',
   ];
 
   List<String?> chosenSymbols = List.filled(5, null);
@@ -374,8 +374,8 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
               showSecondImage
-                  ? 'assets/images/autel_dessus.png'
-                  : 'assets/images/autel.png',
+                  ? 'assets/images_fond/autel_dessus.png'
+                  : 'assets/images_fond/autel.png',
               fit: BoxFit.cover,
             ),
           ),

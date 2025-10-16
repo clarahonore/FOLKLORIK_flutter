@@ -80,7 +80,7 @@ class HomePageState extends State<HomePage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/parchemin.png'),
+                image: AssetImage('assets/images_logo/parchemin.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -203,7 +203,7 @@ class HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/symbole-breton.png',
+                            'assets/images_logo/symbole-breton.png',
                             height: 30,
                             width: 30,
                             color: Colors.white,

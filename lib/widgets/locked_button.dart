@@ -26,7 +26,7 @@ class LockedButton extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Image.asset('assets/images/cadenas.png', height: 20),
+            Image.asset('assets/images_logo/cadenas.png', height: 20),
           ],
         ),
       ),

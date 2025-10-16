@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-
 import '../../services/game_timer_service.dart';
-import 'reveil_enigme1.dart';
+import 'devant_cabane.dart';
 
 class IntroAnimationEnigme1 extends StatefulWidget {
   const IntroAnimationEnigme1({super.key});
@@ -14,56 +13,31 @@ class IntroAnimationEnigme1 extends StatefulWidget {
 
 class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
     with TickerProviderStateMixin {
-  late final AnimationController _zoomController1;
-  late final AnimationController _zoomController2;
-  late final AnimationController _flashController;
+  late final AnimationController _zoomController;
   late final AudioPlayer _audioPlayer;
-
-  bool showSecondImage = false;
   bool hasNavigated = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Démarre le chrono de jeu
     GameTimerService().start();
 
-    // Lance la musique d’intro
     _audioPlayer = AudioPlayer();
     _audioPlayer.play(AssetSource('audio/cabane_reveil.m4a'));
 
-    // Contrôleurs d’animation
-    _zoomController1 = AnimationController(
+    _zoomController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 23),
+      duration: const Duration(seconds: 15),
     )..forward();
 
-    _zoomController2 = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 54),
-    );
-
-    _flashController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-
-    // Transition entre les deux images
-    Future.delayed(const Duration(seconds: 23), () async {
-      await _flashController.forward();
-      setState(() => showSecondImage = true);
-      _zoomController2.forward();
-      await _flashController.reverse();
-    });
-
-    // Fin de l’intro → redirection automatique
-    Future.delayed(const Duration(seconds: 77), () {
+    Future.delayed(const Duration(seconds: 15), () {
       if (!hasNavigated) {
         hasNavigated = true;
+        _audioPlayer.stop();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
+          MaterialPageRoute(builder: (_) => const devantcabane()),
         );
       }
     });
@@ -71,54 +45,33 @@ class _IntroAnimationEnigme1State extends State<IntroAnimationEnigme1>
 
   @override
   void dispose() {
-    _zoomController1.dispose();
-    _zoomController2.dispose();
-    _flashController.dispose();
+    _zoomController.dispose();
     _audioPlayer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final zoom = Tween<double>(begin: 1.0, end: 1.1).animate(
-      showSecondImage ? _zoomController2 : _zoomController1,
-    );
-
-    final flashOpacity = Tween<double>(begin: 0.0, end: 0.8).animate(
-      CurvedAnimation(parent: _flashController, curve: Curves.easeInOut),
-    );
+    final zoom = Tween<double>(begin: 1.0, end: 1.15).animate(_zoomController);
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Animation du zoom
-          AnimatedBuilder(
+      body: SizedBox.expand(
+        child: ClipRect(
+          child: AnimatedBuilder(
             animation: zoom,
             builder: (context, child) {
               return Transform.scale(
                 scale: zoom.value,
-                child: Image.asset(
-                  showSecondImage
-                      ? 'assets/images/intro2.png'
-                      : 'assets/images/intro1.png',
-                  fit: BoxFit.cover,
+                child: SizedBox.expand(
+                  child: Image.asset(
+                    'assets/images_fond/intro1.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               );
             },
           ),
-
-          // Flash lumineux entre les deux images
-          AnimatedBuilder(
-            animation: flashOpacity,
-            builder: (context, child) {
-              return Container(
-                color: Colors.white.withOpacity(flashOpacity.value),
-              );
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

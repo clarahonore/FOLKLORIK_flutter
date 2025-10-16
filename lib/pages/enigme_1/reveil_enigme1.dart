@@ -87,7 +87,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/enigme1_reveil.png'),
+                image: AssetImage('assets/images_fond/enigme1_reveil.png'),
                 fit: BoxFit.cover,
               ),
             ),

@@ -24,9 +24,9 @@
     uses-material-design: true
 
     assets:
-      - assets/images/
-      #- assets/icons/
-      #- assets/videos/
+      - assets/images_fond/
+      - assets/images_enigme/
+      - assets/images_logo/
       - assets/audio/bretagne.mp3
       - assets/audio/Commencer.m4a
       - assets/audio/bretagne_access.m4a
@@ -53,3 +53,4 @@
       - assets/audio/porte en bois.m4a
       - assets/audio/déplacement dans les bois.mp3
       - assets/audio/son du vent.mp3
+      - assets/audio/musique_fond.mp3
