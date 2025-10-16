@@ -8,6 +8,9 @@ import '../widgets/app_button.dart';
 import 'bretagne_page.dart';
 import 'accessibilite_page.dart';
 import '../services/accessibilite_status.dart';
+import '../widgets/developpeurs_button.dart.dart';
+
+bool isDevMode = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,7 +21,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
-
   bool _bretagneNarrationPlayed = false;
   bool _accessibiliteSoundPlayed = false;
 
@@ -77,6 +79,7 @@ class HomePageState extends State<HomePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
+          // Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -89,26 +92,35 @@ class HomePageState extends State<HomePage> {
           SafeArea(
             child: Column(
               children: [
-                const SizedBox(height: 20),
-
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: () => _handleAccessibilite(context, access.narrationActive),
-                      child: Column(
-                        children: [
-                          Icon(Icons.visibility, color: textColor),
-                          const SizedBox(height: 4),
-                          Text("Accessibilité", style: TextStyle(fontSize: 12, color: textColor)),
-                        ],
+                // Ligne du haut avec le bouton développeur et accessibilité
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DeveloppeursButton(
+                        onDevModeActivated: () {
+                          setState(() {
+                            isDevMode = true;
+                          });
+                        },
                       ),
-                    ),
+                      GestureDetector(
+                        onTap: () => _handleAccessibilite(context, access.narrationActive),
+                        child: Column(
+                          children: [
+                            Icon(Icons.visibility, color: textColor),
+                            const SizedBox(height: 4),
+                            Text("Accessibilité", style: TextStyle(fontSize: 12, color: textColor)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 80),
+                const SizedBox(height: 50),
+
 
                 Stack(
                   children: [
@@ -152,6 +164,7 @@ class HomePageState extends State<HomePage> {
                 ),
 
                 const SizedBox(height: 60),
+
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -234,6 +247,15 @@ class HomePageState extends State<HomePage> {
                 const SizedBox(height: 20),
                 const LockedButton(label: "Haut de France"),
                 const LockedButton(label: "Occitanie"),
+
+                const SizedBox(height: 20),
+
+                // Affiche le mode développeur si activé
+                if (isDevMode)
+                  const Text(
+                    "Mode développeur actif 🔓",
+                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
               ],
             ),
           ),
