@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
-import '../../widgets/dev_back_home_button.dart';
 import '../enigme_3/autelMenhirs.dart';
 
 class MenhirsEnigme extends StatefulWidget {
@@ -83,7 +82,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
       disabled[index] = true;
     });
 
-    // Vérification remplissage case
     if (!chosenSymbols.contains(null)) {
       _checkOrder();
     }
@@ -154,7 +152,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // === Image de fond ===
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -183,7 +180,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
             ),
 
           const TimerButton(),
-          const DevBackHomeButton(),
 
           if (showSecondImage && showInstructions)
             Container(
@@ -232,7 +228,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
               ),
             ),
 
-          // === Bouton info ===
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -244,7 +239,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
               ),
             ),
 
-          // === Zone symboles ===
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
@@ -282,7 +276,6 @@ class _Enigme2MenhirsPageState extends State<MenhirsEnigme>
                       ),
                     ),
                     const SizedBox(height: 16),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(5, (index) {

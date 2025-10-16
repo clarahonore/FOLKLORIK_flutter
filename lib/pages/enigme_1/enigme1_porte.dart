@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
 import '../../widgets/app_button.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -25,14 +24,12 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
   void initState() {
     super.initState();
 
-
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat(reverse: true);
 
     _opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
-
   }
 
   @override
@@ -77,7 +74,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🪄 Image de fond dynamique
           GestureDetector(
             onTap: !showSecondImage ? _handleTap : null,
             child: Image.asset(
@@ -88,7 +84,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             ),
           ),
 
-          // ✨ Texte clignotant
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -112,13 +107,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
             child: TimerButton(),
           ),
 
-          const Positioned(
-            top: 200,
-            left: 16,
-            child: DevBackHomeButton(),
-          ),
-
-          // 🪶 Fenêtre des consignes
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
@@ -144,8 +132,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
-
-                      // 🔸 Bouton stylé “Passer à l’énigme”
                       AppButton(
                         text: "Passer à l'énigme",
                         onPressed: _closeInstructions,
@@ -156,7 +142,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-          // 🧭 Bouton info pour rouvrir les consignes
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -168,18 +153,18 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-          // 🧩 Zone du champ et validation
           if (showSecondImage && !showInstructions)
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 80.0, left: 24.0, right: 24.0),
+                padding:
+                const EdgeInsets.only(bottom: 80.0, left: 24.0, right: 24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Champ texte
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(12),
@@ -195,8 +180,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                     ),
                     const SizedBox(height: 12),
-
-                    // 🔸 Bouton stylé “Valider”
                     AppButton(
                       text: "Valider",
                       onPressed: _checkAnswer,

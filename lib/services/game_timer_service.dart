@@ -27,6 +27,7 @@ class GameTimerService {
       } else {
         timer.cancel();
         isRunning = false;
+        _notifyListeners();
       }
     });
   }
@@ -38,6 +39,18 @@ class GameTimerService {
     } else {
       _startTicker();
     }
+  }
+
+  void stop() {
+    _timer?.cancel();
+    isRunning = false;
+    _notifyListeners();
+  }
+
+  void reset() {
+    stop();
+    remainingTime = Duration(minutes: _initialMinutes);
+    _notifyListeners();
   }
 
   void addListener(void Function(Duration) listener) {

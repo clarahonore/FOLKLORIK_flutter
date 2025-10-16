@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import '../../widgets/dev_back_home_button.dart';
 import '../../widgets/timer_button.dart';
 import '../enigme_4/intro_labo_druide.dart';
 
@@ -93,7 +92,6 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
       disabled[index] = true;
     });
 
-    // Vérification remplissage case
     if (!chosenSymbols.contains(null)) {
       _checkOrder();
     }
@@ -125,7 +123,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
           setState(() {
             resetSymbols();
           });
-          refreshPopup?.call(); // 🪄 force le rebuild de la popup
+          refreshPopup?.call();
         });
       }
     }
@@ -158,7 +156,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
     );
 
     await Future.delayed(const Duration(seconds: 5));
-    if (mounted) Navigator.pop(context); // ferme popup
+    if (mounted) Navigator.pop(context);
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -226,7 +224,6 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
                     ),
                     const SizedBox(height: 16),
 
-                    // === Zone symboles ===
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
@@ -282,7 +279,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
                                         disabled[index] = true;
                                       }
                                     });
-                                    setStateDialog(() {}); // 🔄 force rebuild de la popup
+                                    setStateDialog(() {});
                                     if (!chosenSymbols.contains(null)) {
                                       _checkOrder(() => setStateDialog(() {}));
                                     }
@@ -383,7 +380,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
             ),
           ),
 
-          // Message de départ
+
           if (!showSecondImage)
             Center(
               child: FadeTransition(
@@ -404,9 +401,8 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
             ),
 
           const TimerButton(),
-          const DevBackHomeButton(),
 
-          // Instructions de l'énigme
+
           if (showSecondImage && showInstructions)
             Container(
               color: Colors.black.withOpacity(0.85),
@@ -454,7 +450,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
               ),
             ),
 
-          // Bouton info
+
           if (showSecondImage && !showInstructions)
             Positioned(
               top: 16,
@@ -466,7 +462,7 @@ class _AutelMenhirPageState extends State<autelMenhirPage>
               ),
             ),
 
-          // ✅ Zone de clic centrale pour le popup
+
           if (showSecondImage && !showInstructions)
             Center(
               child: GestureDetector(

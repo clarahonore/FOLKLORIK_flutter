@@ -25,10 +25,8 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
       await _audioPlayer.setVolume(0.9);
       await _audioPlayer.resume();
 
-      // Le texte s’affiche
       setState(() => _showText = true);
 
-      // Quand l’audio se termine → animation de glissement vers HomePage
       _audioPlayer.onPlayerComplete.listen((event) {
         if (mounted) {
           Navigator.of(context).pushReplacement(_createSlideRoute());
@@ -42,13 +40,12 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
     }
   }
 
-  // Animation de glissement vers HomePage
   Route _createSlideRoute() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 800),
       pageBuilder: (context, animation, secondaryAnimation) => const HomePage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0); // de droite vers gauche
+        const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
         final tween = Tween(begin: begin, end: end)
             .chain(CurveTween(curve: Curves.easeInOut));
@@ -74,7 +71,6 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Fond d’écran parchemin
           const DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -84,7 +80,6 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
             ),
           ),
 
-          // Texte centré avec fondu et scroll si nécessaire
           AnimatedOpacity(
             opacity: _showText ? 1.0 : 0.0,
             duration: const Duration(seconds: 2),
@@ -136,7 +131,6 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
             ),
           ),
 
-          // Bouton Passer
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -150,7 +144,7 @@ class _IntroFolklorikState extends State<IntroFolklorik> {
                   ),
                 ),
                 onPressed: () {
-                  _audioPlayer.stop(); // Arrête l'audio si en cours
+                  _audioPlayer.stop();
                   Navigator.of(context).pushReplacement(_createSlideRoute());
                 },
                 child: const Text(
