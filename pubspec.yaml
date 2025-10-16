@@ -24,6 +24,7 @@
     uses-material-design: true
 
     assets:
+      - assets/images/
       - assets/images_fond/
       - assets/images_enigme/
       - assets/images_logo/

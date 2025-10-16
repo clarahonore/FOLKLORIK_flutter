@@ -33,7 +33,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images_enigme/a.png',
   ];
 
-  List<String?> chosenSymbols = List.filled(6, null);
+  List<String?> chosenSymbols = List.filled(3, null);
   List<bool> disabled = List.filled(6, false);
 
   late AnimationController _shakeController;
