@@ -8,6 +8,7 @@ import '../widgets/app_button.dart';
 import 'bretagne_page.dart';
 import 'accessibilite_page.dart';
 import '../services/accessibilite_status.dart';
+import '../widgets/voice_button.dart'; // en haut du fichier
 import '../widgets/developpeurs_button.dart.dart';
 
 bool isDevMode = false;
@@ -21,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final AudioPlayer _audioPlayer = AudioPlayer();
+
   bool _bretagneNarrationPlayed = false;
   bool _accessibiliteSoundPlayed = false;
 
@@ -165,7 +167,6 @@ class HomePageState extends State<HomePage> {
 
                 const SizedBox(height: 60),
 
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: GestureDetector(
@@ -256,6 +257,8 @@ class HomePageState extends State<HomePage> {
                     "Mode développeur actif 🔓",
                     style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                   ),
+                const SizedBox(height: 40),
+                const VoiceButton(),
               ],
             ),
           ),
