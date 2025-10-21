@@ -16,7 +16,6 @@ class devantcabane extends StatelessWidget {
       backgroundColor: Colors.brown.shade100,
       body: Stack(
         children: [
-          // 🌲 Contenu principal
           Center(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -50,7 +49,7 @@ class devantcabane extends StatelessWidget {
             ),
           ),
 
-          // 🎒 Bouton d’accès à l’inventaire (un peu plus haut)
+          // Bouton d’accès à l’inventaire (un peu plus haut)
           Positioned(
             bottom: 100, // ajusté
             right: 20,
