@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class DeveloppeursButton extends StatefulWidget {
-  final VoidCallback onDevModeActivated;
+  final ValueChanged<bool> onDevModeChanged; // bool -> true = activé, false = désactivé
+  final bool isDevMode; // état actuel du mode développeur
 
-  const DeveloppeursButton({super.key, required this.onDevModeActivated});
+  const DeveloppeursButton({
+    super.key,
+    required this.onDevModeChanged,
+    required this.isDevMode,
+  });
 
   @override
   State<DeveloppeursButton> createState() => _DeveloppeursButtonState();
@@ -27,7 +32,7 @@ class _DeveloppeursButtonState extends State<DeveloppeursButton> {
             TextButton(
               onPressed: () {
                 if (_controller.text == "1234") {
-                  widget.onDevModeActivated();
+                  widget.onDevModeChanged(true);
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -57,15 +62,40 @@ class _DeveloppeursButtonState extends State<DeveloppeursButton> {
     );
   }
 
+  void _handleTap() {
+    if (widget.isDevMode) {
+      // Si déjà actif → désactive sans demander de code
+      widget.onDevModeChanged(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Mode développeur désactivé 🔒"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      // Sinon → demander le code
+      _showCodeDialog();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _showCodeDialog,
+      onTap: _handleTap,
       child: Column(
-        children: const [
-          Icon(Icons.code, color: Colors.white),
-          SizedBox(height: 4),
-          Text("Développeurs", style: TextStyle(fontSize: 12, color: Colors.white)),
+        children: [
+          Icon(
+            Icons.code,
+            color: widget.isDevMode ? Colors.greenAccent : Colors.white,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "Développeurs",
+            style: TextStyle(
+              fontSize: 12,
+              color: widget.isDevMode ? Colors.greenAccent : Colors.white,
+            ),
+          ),
         ],
       ),
     );
