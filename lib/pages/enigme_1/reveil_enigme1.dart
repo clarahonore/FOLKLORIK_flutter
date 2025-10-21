@@ -83,7 +83,6 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
     return Scaffold(
       body: Stack(
         children: [
-          // 🌅 Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -96,7 +95,6 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           SafeArea(
             child: Column(
               children: [
-                // 🌙 Menu icône (non utilisé mais gardé si utile plus tard)
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
@@ -108,12 +106,11 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                   ),
                 ),
 
-                // ⏱️ Chronomètre
                 const TimerButton(),
 
                 const Spacer(),
 
-                // 🚪 Bouton “Sortir de la cabane”
+
                 if (_showButton)
                   FadeTransition(
                     opacity: _fadeAnimation,

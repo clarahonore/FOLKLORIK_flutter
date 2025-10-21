@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
 import '../fin/fin_animation.dart';
 import 'intro_labo_druide.dart';
+import '../home.dart';
 
 class LaboEnigme extends StatefulWidget {
   const LaboEnigme({super.key});
@@ -336,6 +337,35 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
+                    if (isDevMode)
+                      Positioned(
+                        bottom: 30,
+                        right: 30,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black.withOpacity(0.7),
+                            foregroundColor: Colors.white,
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(Icons.arrow_forward),
+                          label: const Text(
+                            "Page suivante (Dev)",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const FinAnimationPage()),
+                            );
+                          },
+                        ),
+                      ),
                   ],
                 ),
               ),
