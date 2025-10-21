@@ -8,7 +8,7 @@ import '../widgets/app_button.dart';
 import 'bretagne_page.dart';
 import 'accessibilite_page.dart';
 import '../services/accessibilite_status.dart';
-import '../widgets/voice_button.dart'; // en haut du fichier
+import '../widgets/voice_button.dart';
 import '../widgets/developpeurs_button.dart.dart';
 
 bool isDevMode = false;
@@ -101,9 +101,10 @@ class HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       DeveloppeursButton(
-                        onDevModeActivated: () {
+                        isDevMode: isDevMode,
+                        onDevModeChanged: (active) {
                           setState(() {
-                            isDevMode = true;
+                            isDevMode = active;
                           });
                         },
                       ),
