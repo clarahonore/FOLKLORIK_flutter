@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
 import '../../widgets/app_button.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../home.dart';
+import '../enigme_2/intro_pont_menhirs.dart';
 
 class Enigme1PortePage extends StatefulWidget {
   const Enigme1PortePage({super.key});
@@ -20,9 +22,13 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
   bool showSecondImage = false;
   bool showInstructions = false;
 
+  late final AudioPlayer _audioPlayer;
+
   @override
   void initState() {
     super.initState();
+
+    _audioPlayer = AudioPlayer();
 
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
@@ -36,6 +42,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
   void dispose() {
     _controller.dispose();
     _controllerText.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -101,6 +108,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
+          // ⏱️ Bouton du timer
           const Positioned(
             top: 40,
             right: 30,
@@ -186,6 +194,37 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                     ),
                   ],
                 ),
+              ),
+            ),
+
+
+          if (isDevMode)
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text(
+                  "Page suivante (Dev)",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  _audioPlayer.stop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const IntroAnimationEnigme2()),
+                  );
+                },
               ),
             ),
         ],
