@@ -24,8 +24,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images_enigme/b.png',
     'assets/images_enigme/c.png',
     'assets/images_enigme/D.png',
-    'assets/images_enigme/E.png',
-    'assets/images_enigme/F.png'
+    'assets/images_enigme/E.png'
   ];
 
   final List<String> correctOrder = [
@@ -35,7 +34,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   ];
 
   List<String?> chosenSymbols = List.filled(3, null);
-  List<bool> disabled = List.filled(6, false);
+  List<bool> disabled = List.filled(5, false);
 
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
@@ -94,7 +93,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   void resetSymbols() {
     setState(() {
       chosenSymbols = List.filled(3, null);
-      disabled = List.filled(6, false);
+      disabled = List.filled(5, false);
     });
   }
 
@@ -280,7 +279,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 2),
                               borderRadius: BorderRadius.circular(8),
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withAlpha(77),
                             ),
                             child: symbol != null
                                 ? Image.asset(symbol, fit: BoxFit.contain)
@@ -292,7 +291,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(6, (index) {
+                      children: List.generate(5, (index) {
                         return GestureDetector(
                           onTap:
                           disabled[index] ? null : () => onSymbolTap(index),
