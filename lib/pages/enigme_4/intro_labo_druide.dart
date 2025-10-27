@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../services/game_timer_service.dart';
 import 'LaboEnigme.dart';
+import '../home.dart';
 
 class IntroAnimationEnigme4 extends StatefulWidget {
   const IntroAnimationEnigme4({super.key});
@@ -109,6 +110,35 @@ class _IntroAnimationEnigme4State extends State<IntroAnimationEnigme4> with Tick
               );
             },
           ),
+          if (isDevMode)
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text(
+                  "Page suivante (Dev)",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const LaboEnigme()),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );

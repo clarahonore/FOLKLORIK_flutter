@@ -55,7 +55,6 @@ class _IntroApres1erEnigmeState extends State<IntroApres1erEnigme>
     return Scaffold(
       body: Stack(
         children: [
-          // ✅ Image plein écran avec zoom
           SizedBox.expand(
             child: ClipRect(
               child: AnimatedBuilder(
@@ -75,7 +74,6 @@ class _IntroApres1erEnigmeState extends State<IntroApres1erEnigme>
             ),
           ),
 
-          // ✅ Bouton développeur visible uniquement si isDevMode = true
           if (isDevMode)
             Positioned(
               bottom: 30,

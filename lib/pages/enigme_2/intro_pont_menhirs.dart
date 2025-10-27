@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../services/game_timer_service.dart';
 import '../../services/accessibilite_status.dart';
 import 'MenhirsEnigme.dart';
+import '../home.dart';
 
 class IntroAnimationEnigme2 extends StatefulWidget {
   const IntroAnimationEnigme2({super.key});
@@ -156,7 +157,7 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
                 onPressed: () async {
                   if (!hasNavigated) {
                     hasNavigated = true;
-                    //await _audioPlayer.stop();
+                    _stopAllAudio();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (_) => const MenhirsEnigme()),
@@ -165,7 +166,8 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -182,6 +184,36 @@ class _IntroAnimationEnigme2State extends State<IntroAnimationEnigme2>
               ),
             ),
           ),
+
+          if (isDevMode)
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text(
+                  "Page suivante (Dev)",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  _stopAllAudio();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const MenhirsEnigme()),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );

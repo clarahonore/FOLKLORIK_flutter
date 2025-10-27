@@ -85,7 +85,6 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
     return Scaffold(
       body: Stack(
         children: [
-          // 🌅 Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -160,6 +159,7 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                     ),
                   ),
                 ),
+
                 const TimerButton(),
                 const Spacer(),
               ],
