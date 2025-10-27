@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../../widgets/timer_button.dart';
 import '../../services/accessibilite_status.dart';
 import 'enigme1_porte.dart';
+import 'etagere.dart';
+import 'cheminee.dart';
 
 class ReveilEnigme1 extends StatefulWidget {
   const ReveilEnigme1({super.key});
@@ -88,22 +90,26 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images_fond/cabane.png'),
+                image: AssetImage('assets/images_fond/interieur_cabane.png'),
                 fit: BoxFit.cover,
-                alignment: Alignment(0.3, 0.0),
+                alignment: Alignment(0.2, 0.0),
               ),
             ),
           ),
 
           //Zone étagère
           Positioned(
-            left: screenWidth * 0.25,
-            top: screenHeight * 0.20,
-            width: screenWidth * 0.20,
-            height: screenHeight * 0.12,
+            left: screenWidth * 0.35,
+            top: screenHeight * 0.30,
+            width: screenWidth * 0.25,
+            height: screenHeight * 0.15,
             child: GestureDetector(
               onTap: () {
-                debugPrint("Zone étagère touchée !");
+                //debugPrint("Zone étagère touchée !");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const EtagerePage()),
+                );
               },
               child: Container(
                 color: Colors.red.withOpacity(0.3),
@@ -112,15 +118,19 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
             ),
           ),
 
-          //Zone table
+          //Zone cheminée
           Positioned(
-            left: screenWidth * 0.22,
-            top: screenHeight * 0.55,
-            width: screenWidth * 0.25,
-            height: screenHeight * 0.15,
+            left: screenWidth * 0.01,
+            top: screenHeight * 0.25,
+            width: screenWidth * 0.15,
+            height: screenHeight * 0.20,
             child: GestureDetector(
               onTap: () {
-                debugPrint("Zone table touchée !");
+                //debugPrint("Zone table touchée !");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ChemineePage()),
+                );
               },
               child: Container(
                 color: Colors.blue.withOpacity(0.3),
@@ -131,8 +141,8 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
 
           // Zone porte
           Positioned(
-            right: screenWidth * 0.12,
-            top: screenHeight * 0.40,
+            right: screenWidth * 0.01,
+            top: screenHeight * 0.30,
             width: screenWidth * 0.20,
             height: screenHeight * 0.35,
             child: GestureDetector(
@@ -168,24 +178,18 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
           SafeArea(
             child: Column(
               children: [
-                // 🔝 Ligne supérieure : bouton retour + menu
+                // Ligne supérieure : bouton retour + menu
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // 🔙 Bouton retour (haut gauche)
+                      // Bouton retour (haut gauche)
                       IconButton(
                         icon: const Icon(Icons.arrow_back, size: 28, color: Colors.white),
                         onPressed: () {
-                          Navigator.pop(context); // ✅ Retour sans recréer la page
+                          Navigator.pop(context); // Retour sans recréer la page
                         },
-                      ),
-
-                      // 🌙 Bouton menu (haut droite)
-                      IconButton(
-                        icon: const Icon(Icons.menu, size: 28, color: Colors.white),
-                        onPressed: () {},
                       ),
                     ],
                   ),

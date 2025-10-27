@@ -135,7 +135,7 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        "Voici une description à changer : explore les symboles autour de la porte pour reconstituer le code sacré.",
+                        "Explore les symboles autour de la porte pour reconstituer le code sacré.",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
