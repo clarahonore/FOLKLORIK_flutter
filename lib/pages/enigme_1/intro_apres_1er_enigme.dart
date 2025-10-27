@@ -94,7 +94,7 @@ class _IntroApres1erEnigmeState extends State<IntroApres1erEnigme>
                 ),
                 onPressed: () {
                   _audioPlayer.stop();
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
                   );
