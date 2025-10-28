@@ -185,20 +185,26 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
 
           // 🌑 Filtre noir + texte fleur
           if (_fleurActive)
-            Container(
-              color: Colors.black.withOpacity(0.75),
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Text(
-                    "« Je crois que c’est ce qui peut nous sauver…\nmais elle a l’air d’avoir besoin d’eau. »",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => _fleurActive = false),
+                child: Container(
+                  color: Colors.black.withOpacity(0.75),
+                  child: const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: Text(
+                        "« Je crois que c’est ce qui peut nous sauver…\nmais elle a l’air d’avoir besoin d’eau. »",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -207,7 +213,11 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
 
           // 🌑 Filtre noir + texte poignée
           if (_poigneeActive)
-            Container(
+          Positioned.fill(
+          child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() =>  _poigneeActive = false),
+          child:  Container(
               color: Colors.black.withOpacity(0.75),
               child: const Center(
                 child: Padding(
@@ -225,9 +235,11 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
                 ),
               ),
             ),
+          ),
+          ),
 
           // 🎒 Inventaire global (ajouté ici)
-          const InventoryButton(), // ✅ ton bouton d’accès à l’inventaire
+          const InventoryButton(),
 
           // 🔙 Bouton retour → SceneInteractive
           Positioned(
