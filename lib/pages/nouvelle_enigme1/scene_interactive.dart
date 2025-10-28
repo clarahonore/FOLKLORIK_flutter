@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mon_app/pages/nouvelle_enigme1/scene_corbeau_enigme.dart';
+import 'package:provider/provider.dart';
+import '../../services/inventory_service.dart';
+import '../nouvelle_enigme1/scene_corbeau_enigme.dart';
 import 'scene_serre_interactive.dart';
+import '../enigme_1/reveil_enigme1.dart'; // tu ajouteras plus tard ta scène intérieure
 
 class SceneInteractive extends StatefulWidget {
   const SceneInteractive({super.key});
@@ -12,16 +15,14 @@ class SceneInteractive extends StatefulWidget {
 class _SceneInteractiveState extends State<SceneInteractive>
     with TickerProviderStateMixin {
   String _message = "";
+  bool _animationsInitialized = false;
 
   late AnimationController _decorController;
   late AnimationController _calquesController;
-
   late Animation<double> _decorOpacity;
   late Animation<double> _oiseauOpacity;
   late Animation<double> _cabaneOpacity;
   late Animation<double> _serreOpacity;
-
-  bool _animationsInitialized = false;
 
   @override
   void initState() {
@@ -30,40 +31,17 @@ class _SceneInteractiveState extends State<SceneInteractive>
   }
 
   void _initAnimations() {
-    _decorController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
+    _decorController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _calquesController = AnimationController(vsync: this, duration: const Duration(seconds: 3));
 
-    _calquesController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _decorController, curve: Curves.easeIn),
-    );
-
-    _oiseauOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _calquesController,
-        curve: const Interval(0.0, 0.4, curve: Curves.easeIn),
-      ),
-    );
-
-    _cabaneOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _calquesController,
-        curve: const Interval(0.3, 0.7, curve: Curves.easeIn),
-      ),
-    );
-
-    _serreOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _calquesController,
-        curve: const Interval(0.6, 1.0, curve: Curves.easeIn),
-      ),
-    );
+    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _decorController, curve: Curves.easeIn));
+    _oiseauOpacity = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.0, 0.4)));
+    _cabaneOpacity = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.3, 0.7)));
+    _serreOpacity = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.6, 1.0)));
 
     _animationsInitialized = true;
     _startAnimations();
@@ -82,10 +60,17 @@ class _SceneInteractiveState extends State<SceneInteractive>
     super.dispose();
   }
 
-  void _onTapElement(String element) {
-    setState(() {
-      _message = "Tu as cliqué sur : $element 🧩";
-    });
+  void _onTapCabane(BuildContext context) {
+    final inventory = Provider.of<InventoryService>(context, listen: false);
+
+    if (inventory.cabaneDeverrouillee) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const ReveilEnigme1()));
+    } else {
+      setState(() {
+        _message = "🚪 La porte semble verrouillée.";
+      });
+    }
   }
 
   @override
@@ -100,13 +85,9 @@ class _SceneInteractiveState extends State<SceneInteractive>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌄 Décor
           FadeTransition(
             opacity: _decorOpacity,
-            child: Image.asset(
-              "assets/images/paysage.png",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("assets/images/paysage.png", fit: BoxFit.cover),
           ),
 
           // 🏠 Cabane
@@ -115,7 +96,7 @@ class _SceneInteractiveState extends State<SceneInteractive>
             right: 60,
             width: 260,
             child: GestureDetector(
-              onTap: () => _onTapElement("la cabane"),
+              onTap: () => _onTapCabane(context),
               child: FadeTransition(
                 opacity: _cabaneOpacity,
                 child: Image.asset("assets/images/cabane.png"),
@@ -142,8 +123,7 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 🕊️ Oiseau — placé après la cabane pour être au-dessus
-          // 🕊️ Oiseau — placé après la cabane pour être au-dessus
+          // 🕊️ Corbeau
           Positioned(
             bottom: 480,
             right: 150,
@@ -178,7 +158,7 @@ class _SceneInteractiveState extends State<SceneInteractive>
                   child: Text(
                     _message,
                     style: const TextStyle(
-                      color:  Colors.white,
+                      color: Colors.white,
                       fontSize: 20,
                       fontStyle: FontStyle.italic,
                     ),

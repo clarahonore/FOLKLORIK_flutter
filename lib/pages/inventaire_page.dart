@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/inventory_service.dart';
+import 'enigme_serre_corbeau/scene_interieur_serre.dart';
 
 class InventairePage extends StatelessWidget {
   const InventairePage({super.key});
@@ -21,7 +22,7 @@ class InventairePage extends StatelessWidget {
         backgroundColor: Colors.brown.shade700,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // 🔙 Retour à la page précédente
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: objets.isEmpty
@@ -85,8 +86,8 @@ class InventairePage extends StatelessWidget {
   void _showObjetPopup(BuildContext context, Map<String, String> objet) {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    bool isCalice = objet["nom"] == "Calice sacré";
-    bool isCaliceRempli = objet["nom"] == "Calice d’eau pure";
+    final isCle = objet["nom"] == "Clé ancienne";
+    final isCalice = objet["nom"] == "Calice sacré"; // ✅ correction ici
 
     showDialog(
       context: context,
@@ -116,56 +117,115 @@ class InventairePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // 🌊 Bouton spécial si c’est le calice sacré
-              if (isCalice && !inventory.eauPureRecuperee)
+              //  BOUTON UTILISER CLÉ
+              // 🗝️ BOUTON UTILISER CLÉ
+              if (isCle)
                 ElevatedButton.icon(
-                  onPressed: () {
-                    objet["nom"] = "Calice d’eau pure";
-                    objet["description"] =
-                    "Le calice est désormais rempli de l’eau pure de la source Viviane.";
-                    objet["image"] = "assets/images/calice_eau.png";
+                  onPressed: () async {
+                    final rootContext = context;
+                    Navigator.pop(context); // ferme la popup d’inventaire
 
-                    inventory.marquerEauPureRecuperee();
+                    // 🌑 Affiche l’animation magique
+                    showDialog(
+                      context: rootContext,
+                      barrierDismissible: false,
+                      builder: (dialogContext) {
+                        Future.delayed(const Duration(seconds: 2), () {
+                          if (dialogContext.mounted) Navigator.pop(dialogContext);
+                          if (rootContext.mounted) {
+                            // ✅ Déverrouille la serre sans la charger
+                            inventory.marquerSerreDeverrouillee();
 
-                    Navigator.pop(context);
+                            ScaffoldMessenger.of(rootContext).showSnackBar(
+                              const SnackBar(
+                                content: Text("🔓 Vous avez déverrouillé la serre !"),
+                                backgroundColor: Colors.teal,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        });
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("💧 Vous avez rempli le calice d’eau pure !"),
-                        duration: Duration(seconds: 2),
-                      ),
+                        return AnimatedOpacity(
+                          duration: const Duration(milliseconds: 800),
+                          opacity: 1,
+                          child: Container(
+                            color: Colors.black.withOpacity(0.9),
+                            child: const Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.vpn_key, color: Colors.yellow, size: 80),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "🔓 La clé tourne dans la serrure...\nUn déclic se fait entendre.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
-                  icon: const Icon(Icons.water_drop, color: Colors.white),
+                  icon: const Icon(Icons.vpn_key, color: Colors.white),
                   label: const Text(
-                    "Remplir d’eau de la source Viviane",
+                    "Utiliser pour déverrouiller la serre",
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal.shade700,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
 
-              // ✅ Message si déjà rempli
-              if (isCaliceRempli || inventory.eauPureRecuperee)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    "💧 Le calice est déjà rempli d’eau pure.",
-                    textAlign: TextAlign.center,
-                    style:
-                    TextStyle(color: Colors.lightBlueAccent, fontSize: 16),
+              if (isCalice)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    inventory.retirerObjet("Calice sacré"); // ✅ bon nom
+                    inventory.ajouterObjet(
+                      "Calice d’eau pure",
+                      "assets/images/calice_eau.png",
+                      "Le calice est désormais rempli de l’eau sacrée de Viviane.",
+                    );
+                    inventory.marquerEauPureRecuperee(); // ✅ tu marques aussi la progression
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("💧 Le calice a été rempli d’eau pure !"),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.teal,
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.water_drop, color: Colors.white),
+                  label: const Text(
+                    "Remplir d’eau de la Source Viviane",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade700,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
 
               const SizedBox(height: 20),
 
-              // 🔘 Bouton Fermer (commun à tous les objets)
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
@@ -176,8 +236,10 @@ class InventairePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text("Fermer",
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: const Text(
+                  "Fermer",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
             ],
           ),

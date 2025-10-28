@@ -8,6 +8,38 @@ class InventoryService extends ChangeNotifier {
   bool guiRecuperee = false;
   bool caliceRecupere = false;
   bool eauPureRecuperee = false;
+  bool possedeObjet(String nom) {
+    return _objets.any((obj) => obj['nom'] == nom);
+  }
+  bool serreDeverrouillee = false;
+
+  bool cabaneDeverrouillee = false;
+  bool cleRecupereeParCorbeau = false;
+
+  void marquerCabaneDeverrouillee() {
+    cabaneDeverrouillee = true;
+    notifyListeners();
+  }
+
+  void marquerCleCorbeauRecuperee() {
+    cleRecupereeParCorbeau = true;
+    ajouterObjet(
+      "Clé ancienne",
+      "assets/images/cle.png",
+      "Une clé ancienne offerte par le corbeau après lui avoir donné les graines.",
+    );
+    notifyListeners();
+  }
+
+  void marquerSerreDeverrouillee() {
+    serreDeverrouillee = true;
+    notifyListeners();
+  }
+
+  void retirerObjet(String nom) {
+    _objets.removeWhere((obj) => obj['nom'] == nom);
+    notifyListeners();
+  }
 
   void marquerGuiRecuperee() {
     guiRecuperee = true;

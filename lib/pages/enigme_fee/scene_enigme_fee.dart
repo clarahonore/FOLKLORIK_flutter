@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:mon_app/pages/nouvelle_enigme1/scene_serre_interactive.dart';
 import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
 import 'scene_coffre_fee.dart';
@@ -18,6 +19,7 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
 
   bool _animationDebloquee = false;
   bool _animationLancee = false;
+  bool _dejaAllerSource = false;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -52,7 +54,13 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
   Future<void> _verifierConditions() async {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    // 🧩 Si clé ET gui récupérés => animation spéciale
+    // 🧭 Si le joueur a déjà obtenu l’eau pure → pas d’animation
+    if (inventory.eauPureRecuperee) {
+      setState(() => _dejaAllerSource = true);
+      return;
+    }
+
+    // 🧩 Si clé + gui → animation spéciale
     if (inventory.cleRecuperee && inventory.guiRecuperee) {
       setState(() => _animationDebloquee = true);
 
@@ -61,7 +69,7 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
       await Future.delayed(const Duration(seconds: 1));
       setState(() => _animationLancee = true);
 
-      // 🎬 Attend un peu puis redirige
+      // 🎬 Attend puis redirige vers la source Viviane
       await Future.delayed(const Duration(seconds: 10));
       if (mounted) {
         Navigator.pushReplacement(
@@ -92,8 +100,37 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
             fit: BoxFit.cover,
           ),
 
-          // 🔘 Bouton vers le coffre (inactif pendant animation)
-          if (!_animationDebloquee)
+          // 🔙 Si déjà été à la source → bouton retour à la serre
+          if (_dejaAllerSource)
+            Positioned(
+              top: 50,
+              left: 20,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SceneSerreInteractive()),
+                  );
+                },
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                label: const Text(
+                  "Retour à la serre",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black.withOpacity(0.6),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+
+          // 🔘 Bouton vers le coffre (si pas d’animation active)
+          if (!_animationDebloquee && !_dejaAllerSource)
             Positioned(
               bottom: 50,
               left: 0,
@@ -125,8 +162,8 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
               ),
             ),
 
-          // 🌑 Fond noir + apparition fée
-          if (_animationDebloquee)
+          // 🌑 Animation : fond noir + fée
+          if (_animationDebloquee && !_dejaAllerSource)
             AnimatedBuilder(
               animation: _fadeAnimation,
               builder: (context, child) => Opacity(
