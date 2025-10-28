@@ -83,6 +83,11 @@ class InventairePage extends StatelessWidget {
   }
 
   void _showObjetPopup(BuildContext context, Map<String, String> objet) {
+    final inventory = Provider.of<InventoryService>(context, listen: false);
+
+    bool isCalice = objet["nom"] == "Calice sacré";
+    bool isCaliceRempli = objet["nom"] == "Calice d’eau pure";
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -110,6 +115,57 @@ class InventairePage extends StatelessWidget {
                 style: const TextStyle(color: Colors.white70, fontSize: 16),
               ),
               const SizedBox(height: 20),
+
+              // 🌊 Bouton spécial si c’est le calice sacré
+              if (isCalice && !inventory.eauPureRecuperee)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    objet["nom"] = "Calice d’eau pure";
+                    objet["description"] =
+                    "Le calice est désormais rempli de l’eau pure de la source Viviane.";
+                    objet["image"] = "assets/images/calice_eau.png";
+
+                    inventory.marquerEauPureRecuperee();
+
+                    Navigator.pop(context);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("💧 Vous avez rempli le calice d’eau pure !"),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.water_drop, color: Colors.white),
+                  label: const Text(
+                    "Remplir d’eau de la source Viviane",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade700,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+              // ✅ Message si déjà rempli
+              if (isCaliceRempli || inventory.eauPureRecuperee)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "💧 Le calice est déjà rempli d’eau pure.",
+                    textAlign: TextAlign.center,
+                    style:
+                    TextStyle(color: Colors.lightBlueAccent, fontSize: 16),
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+
+              // 🔘 Bouton Fermer (commun à tous les objets)
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../enigme_fee/scene_fee_intro.dart';
+import '../enigme_fee/scene_fee_intro.dart'; // ✅ on importe la scène de l’énigme de la fée
 
 class SceneSerreInteractive extends StatefulWidget {
   const SceneSerreInteractive({super.key});
@@ -40,9 +42,8 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
       duration: const Duration(seconds: 3),
     );
 
-    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _decorController, curve: Curves.easeIn),
-    );
+    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _decorController, curve: Curves.easeIn));
 
     _feeOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -82,12 +83,6 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
     super.dispose();
   }
 
-  void _onTapElement(String element) {
-    setState(() {
-      _message = "Vous avez cliqué sur : $element 🌙";
-    });
-  }
-
   void _onTapFleur() {
     setState(() {
       _fleurActive = !_fleurActive;
@@ -100,6 +95,14 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
       _poigneeActive = !_poigneeActive;
       _fleurActive = false;
     });
+  }
+
+  void _onTapFee() {
+    // 👉 redirection vers l’intro de l’énigme de la fée
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SceneFeeIntro()),
+    );
   }
 
   void _resetFilters() {
@@ -136,7 +139,7 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
             left: 155,
             width: 340,
             child: GestureDetector(
-              onTap: () => _onTapElement("la fée"),
+              onTap: _onTapFee, // ✅ nouvelle redirection ici
               child: FadeTransition(
                 opacity: _feeOpacity,
                 child: Image.asset("assets/images/fee.png"),
@@ -172,35 +175,9 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
             ),
           ),
 
-          // 💬 Message classique
-          if (_message.isNotEmpty && !_fleurActive && !_poigneeActive)
-            Positioned(
-              bottom: 40,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    _message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-
           // 🌑 Filtre noir + texte fleur
           if (_fleurActive)
-            IgnorePointer( // 👈 laisse passer les clics en dessous
+            IgnorePointer(
               ignoring: false,
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 400),
@@ -255,7 +232,7 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
               ),
             ),
 
-          // 🔙 Bouton Retour (au-dessus de tout, en bas)
+          // 🔙 Bouton Retour
           Positioned(
             bottom: 30,
             left: 20,
