@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'accessibilite_page.dart';
 import '../services/accessibilite_status.dart';
 import '../widgets/app_button.dart';
-import 'enigme_1/intro_animation_enigme1.dart';
 import 'home.dart';
+import 'nouvelle_enigme1/arrivee.dart';
 
 class BretagnePage extends StatefulWidget {
   const BretagnePage({super.key});
@@ -87,7 +87,7 @@ class BretagnePageState extends State<BretagnePage> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const IntroAnimationEnigme1()),
+        MaterialPageRoute(builder: (context) => const IntroArrivee()),
       );
     }
   }
