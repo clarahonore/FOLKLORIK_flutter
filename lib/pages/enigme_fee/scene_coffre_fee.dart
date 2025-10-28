@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mon_app/pages/enigme_fee/scene_enigme_fee.dart';
 import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
+import '../../services/game_timer_service.dart';
 import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 
 class SceneCoffreFee extends StatefulWidget {
   const SceneCoffreFee({super.key});
@@ -33,6 +35,11 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
   void initState() {
     super.initState();
 
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) timer.toggle();
+    });
+
     _zoomController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -46,7 +53,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
       duration: const Duration(milliseconds: 600),
     );
 
-    // 🧠 Vérifie l’état du scénario global
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final inventory = Provider.of<InventoryService>(context, listen: false);
       if (inventory.coffreOuvert) {
@@ -159,29 +165,28 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🧳 Coffre fermé
           if (!_unlocked)
             Image.asset("assets/images/coffre_fee.png", fit: BoxFit.cover),
 
-          // 🗝 Coffre ouvert (zoom)
           if (_showCoffreOuvert)
             AnimatedBuilder(
               animation: _zoomAnimation,
               builder: (context, child) {
                 return Transform.scale(
                   scale: _zoomAnimation.value,
-                  child: Image.asset("assets/images/coffre_ouvert.png",
-                      fit: BoxFit.cover),
+                  child: Image.asset(
+                    "assets/images/coffre_ouvert.png",
+                    fit: BoxFit.cover,
+                  ),
                 );
               },
             ),
 
-          // 📦 Intérieur du coffre
           if (_showInterieur)
-            Image.asset("assets/images/interieur_coffre.png",
-                fit: BoxFit.cover),
+            Image.asset("assets/images/interieur_coffre.png", fit: BoxFit.cover),
 
-          // 🗝 Clé à récupérer
+          const TimerButton(),
+
           if (_showCle)
             Positioned(
               bottom: 310,
@@ -193,7 +198,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               ),
             ),
 
-          // 🌿 Branche de gui à récupérer
           if (_showGui)
             Positioned(
               bottom: 320,
@@ -205,7 +209,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               ),
             ),
 
-          // 🔢 Entrée du code
           if (!_unlocked)
             IgnorePointer(
               ignoring: _fadeController.value > 0,
@@ -227,13 +230,18 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          color: Colors.white, fontSize: 28, letterSpacing: 6),
+                        color: Colors.white,
+                        fontSize: 28,
+                        letterSpacing: 6,
+                      ),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         counterText: "",
                         hintText: "----",
-                        hintStyle:
-                        TextStyle(color: Colors.white54, fontSize: 26),
+                        hintStyle: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 26,
+                        ),
                       ),
                     ),
                   ),
@@ -243,7 +251,9 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
                       backgroundColor: Colors.brown,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 14),
+                        horizontal: 40,
+                        vertical: 14,
+                      ),
                     ),
                     child: const Text("Valider le code"),
                   ),
@@ -252,7 +262,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               ),
             ),
 
-          // 💬 Message
           if (_message != null)
             Positioned(
               bottom: 20,
@@ -260,8 +269,7 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               right: 20,
               child: Center(
                 child: Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(10),
@@ -270,13 +278,15 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
                     _message!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        color: Colors.white, fontSize: 18, height: 1.5),
+                      color: Colors.white,
+                      fontSize: 18,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ),
             ),
 
-          // 🌑 Fondu noir
           IgnorePointer(
             ignoring: true,
             child: AnimatedBuilder(
@@ -288,7 +298,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
             ),
           ),
 
-          // ✅ Confirmation clé ou gui récupérée
           if (_cleRecuperee || _guiRecuperee)
             Positioned(
               top: 80,
@@ -310,9 +319,10 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 10,
-                            color: Colors.black),
+                          offset: Offset(0, 0),
+                          blurRadius: 10,
+                          color: Colors.black,
+                        ),
                       ],
                     ),
                   ),
@@ -320,7 +330,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               ),
             ),
 
-          // 🔙 Bouton retour (visible quand coffre ouvert)
           if (_showInterieur)
             Positioned(
               bottom: 40,
@@ -330,8 +339,7 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black.withOpacity(0.6),
                   foregroundColor: Colors.white,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -344,7 +352,6 @@ class _SceneCoffreFeeState extends State<SceneCoffreFee>
               ),
             ),
 
-          // 🎒 Inventaire global
           const InventoryButton(),
         ],
       ),

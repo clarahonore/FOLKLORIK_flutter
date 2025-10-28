@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:mon_app/pages/nouvelle_enigme1/scene_serre_interactive.dart';
 import 'package:provider/provider.dart';
+import 'package:mon_app/pages/nouvelle_enigme1/scene_serre_interactive.dart';
 import '../../services/inventory_service.dart';
+import '../../services/game_timer_service.dart';
+import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 import 'scene_coffre_fee.dart';
 import 'scene_source_viviane.dart';
 
@@ -29,6 +32,12 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
     super.initState();
     _initAnimation();
     _playMelodie();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) timer.toggle();
+    });
+
     _verifierConditions();
   }
 
@@ -54,13 +63,11 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
   Future<void> _verifierConditions() async {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    // 🧭 Si le joueur a déjà obtenu l’eau pure → pas d’animation
     if (inventory.eauPureRecuperee) {
       setState(() => _dejaAllerSource = true);
       return;
     }
 
-    // 🧩 Si clé + gui → animation spéciale
     if (inventory.cleRecuperee && inventory.guiRecuperee) {
       setState(() => _animationDebloquee = true);
 
@@ -69,7 +76,6 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
       await Future.delayed(const Duration(seconds: 1));
       setState(() => _animationLancee = true);
 
-      // 🎬 Attend puis redirige vers la source Viviane
       await Future.delayed(const Duration(seconds: 10));
       if (mounted) {
         Navigator.pushReplacement(
@@ -94,13 +100,15 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌳 Arbre principal
           Image.asset(
             "assets/images/arbre_fee.png",
             fit: BoxFit.cover,
           ),
 
-          // 🔙 Si déjà été à la source → bouton retour à la serre
+          const TimerButton(),
+
+          const InventoryButton(),
+
           if (_dejaAllerSource)
             Positioned(
               top: 50,
@@ -129,7 +137,6 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
               ),
             ),
 
-          // 🔘 Bouton vers le coffre (si pas d’animation active)
           if (!_animationDebloquee && !_dejaAllerSource)
             Positioned(
               bottom: 50,
@@ -162,7 +169,6 @@ class _SceneEnigmeFeeState extends State<SceneEnigmeFee>
               ),
             ),
 
-          // 🌑 Animation : fond noir + fée
           if (_animationDebloquee && !_dejaAllerSource)
             AnimatedBuilder(
               animation: _fadeAnimation,

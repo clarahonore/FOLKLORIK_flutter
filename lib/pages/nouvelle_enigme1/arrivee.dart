@@ -62,7 +62,6 @@ class _IntroArriveeState extends State<IntroArrivee>
     super.dispose();
   }
 
-  /// 👉 Redirige vers la scène interactive
   void _passerIntro() {
     Navigator.pushReplacement(
       context,
@@ -108,7 +107,6 @@ class _IntroArriveeState extends State<IntroArrivee>
             },
           ),
 
-          // Bouton "Passer l’intro"
           if (_showSkip)
             Positioned(
               top: 50,
@@ -126,14 +124,13 @@ class _IntroArriveeState extends State<IntroArrivee>
               ),
             ),
 
-          // Bouton "Continuer"
           Positioned(
             bottom: 60,
             left: 0,
             right: 0,
             child: Center(
               child: ElevatedButton(
-                onPressed: _passerIntro, // 👈 redirection mise à jour
+                onPressed: _passerIntro,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.brown,
                   foregroundColor: Colors.white,

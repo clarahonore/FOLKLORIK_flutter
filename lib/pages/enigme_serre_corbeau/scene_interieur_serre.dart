@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
+import '../../services/game_timer_service.dart';
 import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 import '../nouvelle_enigme1/scene_serre_interactive.dart';
 
 class SceneInterieurSerre extends StatefulWidget {
@@ -23,6 +25,14 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) {
+        timer.toggle();
+      }
+    });
+
     _magicController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -45,17 +55,14 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
         _animationEnCours = true;
       });
 
-      // 🌟 Lancement de l’animation magique
       await _magicController.forward();
 
-      // 🌸 Mise à jour de l’état : plante arrosée → fleurs visibles
       setState(() {
         _planteArrose = true;
         _message =
-        "✨ Bravo ! La plante vous a fourni des graines magiques.\nElles vous seront utiles pour la suite.";
+        "✨ Bravo ! La plante vous a offert des graines magiques.\nElles vous seront utiles pour la suite.";
       });
 
-      // 💧 Gestion inventaire
       inventory.retirerObjet("Calice d’eau pure");
       inventory.ajouterObjet(
         "Graines magiques",
@@ -63,7 +70,6 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
         "Des graines luisantes offertes par la plante mystique.",
       );
 
-      // ⏳ Laisse l’animation visible un court instant
       await Future.delayed(const Duration(seconds: 1));
       setState(() {
         _animationEnCours = false;
@@ -82,7 +88,6 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌿 Fond normal ou avec fleur selon l’état
           Image.asset(
             _planteArrose
                 ? "assets/images/interieur_serre_fleur.png"
@@ -90,7 +95,8 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
             fit: BoxFit.cover,
           ),
 
-          // 🌟 Animation magique (halo doré léger)
+          const TimerButton(),
+
           if (_animationEnCours)
             FadeTransition(
               opacity: _magicOpacity,
@@ -108,7 +114,6 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
               ),
             ),
 
-          // 🌿 Bouton arroser la plante (désactivé après succès)
           if (!_planteArrose)
             Positioned(
               bottom: 140,
@@ -124,8 +129,8 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal.shade700,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 14),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -134,7 +139,6 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
               ),
             ),
 
-          // 💬 Message d’action
           if (_message.isNotEmpty)
             Positioned(
               bottom: 40,
@@ -152,13 +156,15 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
                     _message,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        color: Colors.white, fontSize: 18, height: 1.5),
+                      color: Colors.white,
+                      fontSize: 18,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ),
             ),
 
-          // 🔙 Retour à la serre
           Positioned(
             bottom: 30,
             left: 20,
@@ -179,7 +185,6 @@ class _SceneInterieurSerreState extends State<SceneInterieurSerre>
             ),
           ),
 
-          // 🎒 Bouton Inventaire
           const InventoryButton(),
         ],
       ),

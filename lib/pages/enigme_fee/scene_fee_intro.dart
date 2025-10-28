@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'scene_enigme_fee.dart';
+import 'package:mon_app/pages/enigme_fee/scene_enigme_fee.dart';
+import '../../services/game_timer_service.dart';
+import '../../widgets/timer_button.dart';
+import '../../widgets/inventory_button.dart';
 
 class SceneFeeIntro extends StatefulWidget {
   const SceneFeeIntro({super.key});
@@ -14,8 +17,14 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) timer.toggle();
+    });
+
     Future.delayed(const Duration(milliseconds: 800), () {
-      setState(() => _showText = true);
+      if (mounted) setState(() => _showText = true);
     });
   }
 
@@ -26,7 +35,6 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          //  Fée (centrée, elle te regarde)
           Center(
             child: Image.asset(
               "assets/images/fee_face.png",
@@ -34,7 +42,10 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
             ),
           ),
 
-          // Texte de dialogue
+          const TimerButton(),
+
+          const InventoryButton(),
+
           if (_showText)
             Positioned(
               bottom: 160,
@@ -43,12 +54,12 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
               child: AnimatedOpacity(
                 opacity: 1,
                 duration: const Duration(seconds: 1),
-                child: Text(
+                child: const Text(
                   "« Vous voilà enfin... Vous entendez ?\n"
                       "La forêt murmure... La clé est cachée,\n"
                       "mais seule une oreille attentive saura l'entendre... »",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontStyle: FontStyle.italic,
@@ -58,7 +69,6 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
               ),
             ),
 
-          // Bouton Continuer
           Positioned(
             bottom: 60,
             left: 0,
@@ -68,7 +78,8 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SceneEnigmeFee()),
+                    MaterialPageRoute(
+                        builder: (context) => const SceneEnigmeFee()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -77,7 +88,8 @@ class _SceneFeeIntroState extends State<SceneFeeIntro> {
                   padding:
                   const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: const Text(
                   "Continuer",
