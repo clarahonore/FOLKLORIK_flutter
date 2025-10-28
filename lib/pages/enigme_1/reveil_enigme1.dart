@@ -112,8 +112,8 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                 );
               },
               child: Container(
-                color: Colors.red.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.red.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -133,8 +133,8 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
                 );
               },
               child: Container(
-                color: Colors.blue.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.blue.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -148,8 +148,8 @@ class _ReveilEnigme1State extends State<ReveilEnigme1>
             child: GestureDetector(
               onTap: () => _handleSortirCabane(context, access.narrationActive),
               child: Container(
-                color: Colors.green.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.green.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),

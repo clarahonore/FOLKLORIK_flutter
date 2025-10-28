@@ -55,8 +55,8 @@ class EtagerePage extends StatelessWidget {
                 );
               },
               child: Container(
-                color: Colors.blue.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.blue.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -85,8 +85,8 @@ class EtagerePage extends StatelessWidget {
                 );
               },
               child: Container(
-                color: Colors.red.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.red.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -115,8 +115,8 @@ class EtagerePage extends StatelessWidget {
                 );
               },
               child: Container(
-                color: Colors.yellow.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.yellow.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -144,10 +144,22 @@ class EtagerePage extends StatelessWidget {
                     );
                   },
                 );
+                inventory.ajouterObjet(
+                  "Parchemin runique",
+                  "assets/images_enigme/rouler.PNG",
+                  "C'est une sorte d'alphabet celtique avec des runes.",
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                    Text("Un parchemin runique est ajouté à l’inventaire 🔑"),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               child: Container(
-                color: Colors.purple.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.purple.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
@@ -176,8 +188,8 @@ class EtagerePage extends StatelessWidget {
                 );
               },
               child: Container(
-                color: Colors.orange.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.orange.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),

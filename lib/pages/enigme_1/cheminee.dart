@@ -62,10 +62,22 @@ class ChemineePage extends StatelessWidget {
                     );
                   },
                 );
+                inventory.ajouterObjet(
+                  "Carte environs",
+                  "assets/images_enigme/parchemin.PNG",
+                  "C'est une carte de la fôret qui entoure la cabane.",
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                    Text("La carte des environs est ajoutée à l’inventaire 🔑"),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               child: Container(
-                color: Colors.red.withOpacity(0.3),
-                //color: Colors.transparent,
+                //color: Colors.red.withOpacity(0.3),
+                color: Colors.transparent,
               ),
             ),
           ),
