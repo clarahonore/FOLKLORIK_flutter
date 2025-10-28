@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/timer_button.dart';
 import '../fin/fin_animation.dart';
 import 'intro_labo_druide.dart';
+import '../home.dart';
 
 class LaboEnigme extends StatefulWidget {
   const LaboEnigme({super.key});
@@ -23,8 +24,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images_enigme/b.png',
     'assets/images_enigme/c.png',
     'assets/images_enigme/D.png',
-    'assets/images_enigme/E.png',
-    'assets/images_enigme/F.png'
+    'assets/images_enigme/E.png'
   ];
 
   final List<String> correctOrder = [
@@ -33,8 +33,8 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
     'assets/images_enigme/a.png',
   ];
 
-  List<String?> chosenSymbols = List.filled(6, null);
-  List<bool> disabled = List.filled(6, false);
+  List<String?> chosenSymbols = List.filled(3, null);
+  List<bool> disabled = List.filled(5, false);
 
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
@@ -93,7 +93,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
   void resetSymbols() {
     setState(() {
       chosenSymbols = List.filled(3, null);
-      disabled = List.filled(6, false);
+      disabled = List.filled(5, false);
     });
   }
 
@@ -279,7 +279,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 2),
                               borderRadius: BorderRadius.circular(8),
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withAlpha(77),
                             ),
                             child: symbol != null
                                 ? Image.asset(symbol, fit: BoxFit.contain)
@@ -291,7 +291,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(6, (index) {
+                      children: List.generate(5, (index) {
                         return GestureDetector(
                           onTap:
                           disabled[index] ? null : () => onSymbolTap(index),
@@ -336,6 +336,35 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
+                    if (isDevMode)
+                      Positioned(
+                        bottom: 30,
+                        right: 30,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black.withOpacity(0.7),
+                            foregroundColor: Colors.white,
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(Icons.arrow_forward),
+                          label: const Text(
+                            "Page suivante (Dev)",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const FinAnimationPage()),
+                            );
+                          },
+                        ),
+                      ),
                   ],
                 ),
               ),

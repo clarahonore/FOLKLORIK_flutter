@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@openai/agents": "^0.1.9",
+    "openai": "^6.3.0",
+    "play-audio": "^0.5.2"
+  }
+}
