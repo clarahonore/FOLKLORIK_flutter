@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/inventory_service.dart';
+import 'enigme_serre_corbeau/scene_interieur_serre.dart';
 
 class InventairePage extends StatelessWidget {
   const InventairePage({super.key});
@@ -21,7 +22,7 @@ class InventairePage extends StatelessWidget {
         backgroundColor: Colors.brown.shade700,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // 🔙 Retour à la page précédente
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: objets.isEmpty
@@ -83,6 +84,11 @@ class InventairePage extends StatelessWidget {
   }
 
   void _showObjetPopup(BuildContext context, Map<String, String> objet) {
+    final inventory = Provider.of<InventoryService>(context, listen: false);
+
+    final isCle = objet["nom"] == "Clé ancienne";
+    final isCalice = objet["nom"] == "Calice sacré"; // ✅ correction ici
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -110,6 +116,116 @@ class InventairePage extends StatelessWidget {
                 style: const TextStyle(color: Colors.white70, fontSize: 16),
               ),
               const SizedBox(height: 20),
+
+              //  BOUTON UTILISER CLÉ
+              // 🗝️ BOUTON UTILISER CLÉ
+              if (isCle)
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final rootContext = context;
+                    Navigator.pop(context); // ferme la popup d’inventaire
+
+                    // 🌑 Affiche l’animation magique
+                    showDialog(
+                      context: rootContext,
+                      barrierDismissible: false,
+                      builder: (dialogContext) {
+                        Future.delayed(const Duration(seconds: 2), () {
+                          if (dialogContext.mounted) Navigator.pop(dialogContext);
+                          if (rootContext.mounted) {
+                            // ✅ Déverrouille la serre sans la charger
+                            inventory.marquerSerreDeverrouillee();
+
+                            ScaffoldMessenger.of(rootContext).showSnackBar(
+                              const SnackBar(
+                                content: Text("🔓 Vous avez déverrouillé la serre !"),
+                                backgroundColor: Colors.teal,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        });
+
+                        return AnimatedOpacity(
+                          duration: const Duration(milliseconds: 800),
+                          opacity: 1,
+                          child: Container(
+                            color: Colors.black.withOpacity(0.9),
+                            child: const Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.vpn_key, color: Colors.yellow, size: 80),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "🔓 La clé tourne dans la serrure...\nUn déclic se fait entendre.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.vpn_key, color: Colors.white),
+                  label: const Text(
+                    "Utiliser pour déverrouiller la serre",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade700,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+              if (isCalice)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    inventory.retirerObjet("Calice sacré"); // ✅ bon nom
+                    inventory.ajouterObjet(
+                      "Calice d’eau pure",
+                      "assets/images/calice_eau.png",
+                      "Le calice est désormais rempli de l’eau sacrée de Viviane.",
+                    );
+                    inventory.marquerEauPureRecuperee(); // ✅ tu marques aussi la progression
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("💧 Le calice a été rempli d’eau pure !"),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.teal,
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.water_drop, color: Colors.white),
+                  label: const Text(
+                    "Remplir d’eau de la Source Viviane",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade700,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
@@ -120,8 +236,10 @@ class InventairePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text("Fermer",
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: const Text(
+                  "Fermer",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
             ],
           ),

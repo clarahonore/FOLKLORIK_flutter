@@ -279,7 +279,7 @@ class _Enigme4MenhirsPageState extends State<LaboEnigme>
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white, width: 2),
                               borderRadius: BorderRadius.circular(8),
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withAlpha(77),
                             ),
                             child: symbol != null
                                 ? Image.asset(symbol, fit: BoxFit.contain)
