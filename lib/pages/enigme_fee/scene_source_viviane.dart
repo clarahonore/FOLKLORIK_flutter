@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mon_app/pages/enigme_fee/scene_enigme_fee.dart';
 import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
+import '../../services/game_timer_service.dart';
 import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 
 class SceneSourceViviane extends StatefulWidget {
   const SceneSourceViviane({super.key});
@@ -16,6 +18,16 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
   String _message = "";
   bool _enigmeTerminee = false;
   bool _caliceRecupere = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) timer.toggle();
+    });
+  }
 
   @override
   void dispose() {
@@ -44,7 +56,8 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
       }
     } else {
       setState(() {
-        _message = "❌ Viviane sourit doucement... « Ce n’est pas la bonne réponse. »";
+        _message =
+        "❌ Viviane sourit doucement... « Ce n’est pas la bonne réponse. »";
       });
     }
   }
@@ -55,13 +68,15 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌊 Arrière-plan
           Image.asset(
             "assets/images/source_viviane.png",
             fit: BoxFit.cover,
           ),
 
-          // 🔙 Bouton retour vers la serre
+          const TimerButton(),
+
+          const InventoryButton(),
+
           Positioned(
             top: 40,
             left: 20,
@@ -69,7 +84,8 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const SceneEnigmeFee()),
+                  MaterialPageRoute(
+                      builder: (context) => const SceneEnigmeFee()),
                 );
               },
               icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -79,7 +95,8 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black.withOpacity(0.5),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -87,7 +104,6 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
             ),
           ),
 
-          // 💬 Introduction en haut
           Positioned(
             top: 100,
             left: 0,
@@ -100,15 +116,15 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
                 child: const Text(
                   "La fée Viviane vous accueille 💧",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
 
-          // 📜 Texte narratif
           Positioned(
             top: 180,
             left: 0,
@@ -126,7 +142,6 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
             ),
           ),
 
-          // 🔠 Zone de réponse
           if (!_enigmeTerminee)
             Positioned(
               bottom: 160,
@@ -144,8 +159,8 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
                     child: TextField(
                       controller: _answerController,
                       textAlign: TextAlign.center,
-                      style:
-                      const TextStyle(color: Colors.white, fontSize: 20),
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: 20),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Votre réponse...",
@@ -174,7 +189,6 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
               ),
             ),
 
-          // 💬 Message de résultat
           if (_message.isNotEmpty)
             Positioned(
               bottom: 60,
@@ -197,9 +211,6 @@ class _SceneSourceVivianeState extends State<SceneSourceViviane> {
                 ),
               ),
             ),
-
-          // 🎒 Inventaire global
-          const InventoryButton(),
         ],
       ),
     );

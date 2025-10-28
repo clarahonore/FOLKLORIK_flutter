@@ -87,7 +87,7 @@ class InventairePage extends StatelessWidget {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
     final isCle = objet["nom"] == "Clé ancienne";
-    final isCalice = objet["nom"] == "Calice sacré"; // ✅ correction ici
+    final isCalice = objet["nom"] == "Calice sacré";
 
     showDialog(
       context: context,
@@ -117,32 +117,19 @@ class InventairePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              //  BOUTON UTILISER CLÉ
-              // 🗝️ BOUTON UTILISER CLÉ
+
               if (isCle)
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final rootContext = context;
-                    Navigator.pop(context); // ferme la popup d’inventaire
+                    Navigator.of(context, rootNavigator: true).pop();
 
-                    // 🌑 Affiche l’animation magique
-                    showDialog(
-                      context: rootContext,
+                    await showDialog(
+                      context: context,
                       barrierDismissible: false,
                       builder: (dialogContext) {
-                        Future.delayed(const Duration(seconds: 2), () {
-                          if (dialogContext.mounted) Navigator.pop(dialogContext);
-                          if (rootContext.mounted) {
-                            // ✅ Déverrouille la serre sans la charger
-                            inventory.marquerSerreDeverrouillee();
-
-                            ScaffoldMessenger.of(rootContext).showSnackBar(
-                              const SnackBar(
-                                content: Text("🔓 Vous avez déverrouillé la serre !"),
-                                backgroundColor: Colors.teal,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
+                         Future.delayed(const Duration(seconds: 2), () {
+                          if (Navigator.of(dialogContext, rootNavigator: true).canPop()) {
+                            Navigator.of(dialogContext, rootNavigator: true).pop();
                           }
                         });
 
@@ -158,7 +145,7 @@ class InventairePage extends StatelessWidget {
                                   Icon(Icons.vpn_key, color: Colors.yellow, size: 80),
                                   SizedBox(height: 20),
                                   Text(
-                                    "🔓 La clé tourne dans la serrure...\nUn déclic se fait entendre.",
+                                    "🔓 La clé tourne dans la serrure...\nLa serre s’ouvre lentement.",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -173,6 +160,23 @@ class InventairePage extends StatelessWidget {
                         );
                       },
                     );
+
+                    final inv = Provider.of<InventoryService>(context, listen: false);
+                    inv.marquerSerreDeverrouillee();
+                    inv.retirerObjet("Clé ancienne");
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("🔓 Vous avez déverrouillé la serre !"),
+                        backgroundColor: Colors.teal,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SceneInterieurSerre()),
+                    );
                   },
                   icon: const Icon(Icons.vpn_key, color: Colors.white),
                   label: const Text(
@@ -182,24 +186,23 @@ class InventairePage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal.shade700,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
+
 
               if (isCalice)
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
 
-                    inventory.retirerObjet("Calice sacré"); // ✅ bon nom
+                    inventory.retirerObjet("Calice sacré");
                     inventory.ajouterObjet(
                       "Calice d’eau pure",
                       "assets/images/calice_eau.png",
                       "Le calice est désormais rempli de l’eau sacrée de Viviane.",
                     );
-                    inventory.marquerEauPureRecuperee(); // ✅ tu marques aussi la progression
+                    inventory.marquerEauPureRecuperee();
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

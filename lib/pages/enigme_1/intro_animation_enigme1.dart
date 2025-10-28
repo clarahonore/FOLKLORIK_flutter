@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../services/game_timer_service.dart';
 import 'devant_cabane.dart';
-import '../home.dart'; // pour accéder à isDevMode
+import '../home.dart';
 
 class IntroAnimationEnigme1 extends StatefulWidget {
   const IntroAnimationEnigme1({super.key});

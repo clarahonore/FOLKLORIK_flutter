@@ -108,7 +108,6 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
               ),
             ),
 
-          // ⏱️ Bouton du timer
           const Positioned(
             top: 40,
             right: 30,

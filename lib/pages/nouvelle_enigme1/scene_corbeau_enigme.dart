@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../services/inventory_service.dart';
+import '../../services/game_timer_service.dart';
+import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 
 class SceneCorbeauEnigme extends StatefulWidget {
   const SceneCorbeauEnigme({super.key});
@@ -9,6 +14,20 @@ class SceneCorbeauEnigme extends StatefulWidget {
 
 class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
   bool _showText = false;
+  bool _animationEnCours = false;
+  bool _cleRecuperee = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) {
+        timer.toggle();
+      }
+    });
+  }
 
   void _toggleText() {
     setState(() {
@@ -16,13 +35,80 @@ class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
     });
   }
 
+  Future<void> _donnerGraines(BuildContext context) async {
+    if (_animationEnCours) return;
+
+    final inventory = Provider.of<InventoryService>(context, listen: false);
+
+    if (!inventory.possedeObjet("Graines magiques")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("🌾 Tu n’as pas de graines à donner au corbeau."),
+          backgroundColor: Colors.brown,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _animationEnCours = true);
+    inventory.retirerObjet("Graines magiques");
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        Future.delayed(const Duration(seconds: 3), () {
+          if (dialogContext.mounted) Navigator.pop(dialogContext);
+        });
+
+        return Container(
+          color: Colors.black.withOpacity(0.85),
+          child: const Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                "Vous avez donné les graines au corbeau.\n"
+                    "Il les picore avec avidité...\n"
+                    "Puis laisse tomber une clé brillante à vos pieds ! 🗝️",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontStyle: FontStyle.italic,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    inventory.marquerCleCorbeauRecuperee();
+
+    setState(() {
+      _cleRecuperee = true;
+      _animationEnCours = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("🗝️ Tu as obtenu la clé de la cabane !"),
+        backgroundColor: Colors.teal,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final inventory = context.watch<InventoryService>();
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🖼️ Image de fond
           GestureDetector(
             onTap: _toggleText,
             child: Image.asset(
@@ -31,7 +117,8 @@ class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
             ),
           ),
 
-          // 🖋️ Texte central (affiché au clic)
+          const TimerButton(),
+
           if (_showText)
             AnimatedOpacity(
               opacity: 1,
@@ -42,7 +129,9 @@ class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
-                      "« Le corbeau semble avoir une clé autour de la patte.\n"
+                      _cleRecuperee
+                          ? "Le corbeau t’a déjà donné la clé.\nTu peux maintenant ouvrir la cabane !"
+                          : "« Le corbeau semble avoir une clé autour de la patte.\n"
                           "Ce serait peut-être la clé de la cabane...\n"
                           "Mais comment la prendre ? »",
                       textAlign: TextAlign.center,
@@ -59,7 +148,31 @@ class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
               ),
             ),
 
-          // 🔙 Bouton Retour
+          const InventoryButton(),
+
+          if (inventory.possedeObjet("Graines magiques") && !_cleRecuperee)
+            Positioned(
+              bottom: 110,
+              right: 20,
+              child: ElevatedButton.icon(
+                onPressed: () => _donnerGraines(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal.shade700,
+                  foregroundColor: Colors.white,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.volunteer_activism),
+                label: const Text(
+                  "Donner les graines au corbeau",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+
           Positioned(
             bottom: 30,
             left: 20,

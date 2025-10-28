@@ -41,7 +41,7 @@ class ChemineePage extends StatelessWidget {
                 //debugPrint("Zone 1 touchée !");
                 showDialog(
                   context: context,
-                  barrierDismissible: true, // ✅ Ferme quand on clique à l'extérieur
+                  barrierDismissible: true,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       backgroundColor: Colors.brown[100]?.withOpacity(0.95),

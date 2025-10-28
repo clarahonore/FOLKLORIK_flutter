@@ -81,7 +81,6 @@ class HomePageState extends State<HomePage> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          // Fond parchemin
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(

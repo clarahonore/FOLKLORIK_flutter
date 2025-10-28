@@ -49,9 +49,8 @@ class devantcabane extends StatelessWidget {
             ),
           ),
 
-          // Bouton d’accès à l’inventaire (un peu plus haut)
           Positioned(
-            bottom: 100, // ajusté
+            bottom: 100,
             right: 20,
             child: FloatingActionButton.extended(
               backgroundColor: Colors.brown.shade600,
@@ -70,7 +69,6 @@ class devantcabane extends StatelessWidget {
           ),
 
 
-          // Bouton pour ajouter un objet test (plus bas)
           Positioned(
             bottom: 100,
             left: 20,

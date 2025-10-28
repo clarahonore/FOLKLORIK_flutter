@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
 import '../nouvelle_enigme1/scene_corbeau_enigme.dart';
 import 'scene_serre_interactive.dart';
-import '../enigme_1/reveil_enigme1.dart'; // tu ajouteras plus tard ta scène intérieure
+import '../enigme_1/reveil_enigme1.dart';
+import '../../services/game_timer_service.dart';
+import '../../widgets/timer_button.dart';
 
 class SceneInteractive extends StatefulWidget {
   const SceneInteractive({super.key});
@@ -28,20 +30,42 @@ class _SceneInteractiveState extends State<SceneInteractive>
   void initState() {
     super.initState();
     _initAnimations();
+
+    // 🕒 Démarre le timer global si ce n’est pas déjà fait
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) {
+        timer.start();
+      }
+    });
   }
 
   void _initAnimations() {
-    _decorController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _calquesController = AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _decorController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _calquesController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
 
-    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _decorController, curve: Curves.easeIn));
-    _oiseauOpacity = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.0, 0.4)));
-    _cabaneOpacity = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.3, 0.7)));
-    _serreOpacity = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _calquesController, curve: const Interval(0.6, 1.0)));
+    _decorOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: _decorController, curve: Curves.easeIn));
+
+    _oiseauOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+          parent: _calquesController,
+          curve: const Interval(0.0, 0.4, curve: Curves.easeIn)),
+    );
+
+    _cabaneOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+          parent: _calquesController,
+          curve: const Interval(0.3, 0.7, curve: Curves.easeIn)),
+    );
+
+    _serreOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+          parent: _calquesController,
+          curve: const Interval(0.6, 1.0, curve: Curves.easeIn)),
+    );
 
     _animationsInitialized = true;
     _startAnimations();
@@ -63,12 +87,16 @@ class _SceneInteractiveState extends State<SceneInteractive>
   void _onTapCabane(BuildContext context) {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    if (inventory.cabaneDeverrouillee) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const ReveilEnigme1()));
+    // 🗝️ Si la cabane est déverrouillée, on entre
+    if (inventory.cabaneDeverrouillee ||
+        inventory.possedeObjet("Clé de la cabane")) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
+      );
     } else {
       setState(() {
-        _message = "🚪 La porte semble verrouillée.";
+        _message = "🚪 La porte semble verrouillée...";
       });
     }
   }
@@ -85,12 +113,16 @@ class _SceneInteractiveState extends State<SceneInteractive>
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // 🌄 Décor principal
           FadeTransition(
             opacity: _decorOpacity,
             child: Image.asset("assets/images/paysage.png", fit: BoxFit.cover),
           ),
 
-          // 🏠 Cabane
+          // 🕒 Timer global en haut à droite
+          const TimerButton(),
+
+          // 🏚️ Cabane (entrée possible si clé trouvée)
           Positioned(
             bottom: 310,
             right: 60,
@@ -104,7 +136,7 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 🌿 Serre
+          // 🌿 Serre magique
           Positioned(
             bottom: 300,
             right: 320,
@@ -113,7 +145,8 @@ class _SceneInteractiveState extends State<SceneInteractive>
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SceneSerreInteractive()),
+                  MaterialPageRoute(
+                      builder: (context) => const SceneSerreInteractive()),
                 );
               },
               child: FadeTransition(
@@ -123,7 +156,7 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 🕊️ Corbeau
+          // 🐦 Corbeau sur la branche
           Positioned(
             bottom: 480,
             right: 150,
@@ -132,7 +165,8 @@ class _SceneInteractiveState extends State<SceneInteractive>
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SceneCorbeauEnigme()),
+                  MaterialPageRoute(
+                      builder: (context) => const SceneCorbeauEnigme()),
                 );
               },
               child: FadeTransition(
@@ -142,27 +176,32 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 💬 Message
+          // 💬 Message affiché temporairement
           if (_message.isNotEmpty)
             Positioned(
               bottom: 40,
               left: 0,
               right: 0,
               child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    _message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontStyle: FontStyle.italic,
+                child: AnimatedOpacity(
+                  opacity: 1.0,
+                  duration: const Duration(milliseconds: 400),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    textAlign: TextAlign.center,
+                    child: Text(
+                      _message,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),

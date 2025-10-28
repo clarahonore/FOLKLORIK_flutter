@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/inventory_service.dart';
-import '../../widgets/inventory_button.dart'; // ✅ on importe le bouton inventaire
+import '../../services/game_timer_service.dart';
+import '../../widgets/inventory_button.dart';
+import '../../widgets/timer_button.dart';
 import '../enigme_fee/scene_fee_intro.dart';
 import '../enigme_serre_corbeau/scene_interieur_serre.dart';
 import '../nouvelle_enigme1/scene_interactive.dart';
@@ -30,6 +32,13 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
   void initState() {
     super.initState();
     _initAnimations();
+
+    Future.delayed(Duration.zero, () {
+      final timer = GameTimerService();
+      if (!timer.isRunning) {
+        timer.toggle();
+      }
+    });
   }
 
   void _initAnimations() {
@@ -80,7 +89,9 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
   void _onTapPoignee(BuildContext context) {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    if (inventory.serreDeverrouillee) {
+    if (inventory.serreDeverrouillee || inventory.possedeObjet("Clé ancienne")) {
+      inventory.marquerSerreDeverrouillee();
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SceneInterieurSerre()),
@@ -135,19 +146,22 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
             ),
           ),
 
-          // ✨ Fée (désactivée si feeBloquee == true)
+          // ⏱️ Timer global en haut à droite
+          const TimerButton(),
+
+          // 🧚‍♀️ Fée (désactivée si déjà aidée)
           Positioned(
             bottom: 163,
             left: 155,
             width: 340,
             child: IgnorePointer(
-              ignoring: feeBloquee, // ⛔️ désactive les clics
+              ignoring: feeBloquee,
               child: GestureDetector(
                 onTap: feeBloquee ? null : _onTapFee,
                 child: FadeTransition(
                   opacity: _feeOpacity,
                   child: Opacity(
-                    opacity: feeBloquee ? 0.6 : 1.0, // petit feedback visuel
+                    opacity: feeBloquee ? 0.6 : 1.0,
                     child: Image.asset("assets/images/fee.png"),
                   ),
                 ),
@@ -169,7 +183,7 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
             ),
           ),
 
-          // 🔑 Poignée
+          // 🔒 Poignée
           Positioned(
             bottom: 332,
             right: 158,
@@ -183,7 +197,7 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
             ),
           ),
 
-          // 🌑 Filtre noir + texte fleur
+          // 💬 Texte Fleur
           if (_fleurActive)
             Positioned.fill(
               child: GestureDetector(
@@ -211,7 +225,6 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
               ),
             ),
 
-          // 🌑 Filtre noir + texte poignée
           if (_poigneeActive)
           Positioned.fill(
           child: GestureDetector(
@@ -238,7 +251,6 @@ class _SceneSerreInteractiveState extends State<SceneSerreInteractive>
           ),
           ),
 
-          // 🎒 Inventaire global (ajouté ici)
           const InventoryButton(),
 
           // 🔙 Bouton retour → SceneInteractive

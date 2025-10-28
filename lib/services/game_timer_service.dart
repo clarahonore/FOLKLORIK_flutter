@@ -6,7 +6,10 @@ class GameTimerService {
   GameTimerService._internal();
 
   final int _initialMinutes = 45;
-  late Duration remainingTime;
+
+  // ✅ on initialise directement la durée pour éviter le LateInitializationError
+  Duration remainingTime = const Duration(minutes: 45);
+
   Timer? _timer;
   bool isRunning = false;
 
