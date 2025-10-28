@@ -227,6 +227,30 @@ class _Enigme1PortePageState extends State<Enigme1PortePage>
                 },
               ),
             ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                // Ligne supérieure : bouton retour + menu
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Bouton retour (haut gauche)
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, size: 28, color: Colors.white),
+                        onPressed: () {
+                          Navigator.pop(context); // Retour sans recréer la page
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+          ),
         ],
       ),
     );
