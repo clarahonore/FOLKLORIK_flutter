@@ -6,6 +6,7 @@ import 'scene_serre_interactive.dart';
 import '../enigme_1/reveil_enigme1.dart';
 import '../../services/game_timer_service.dart';
 import '../../widgets/timer_button.dart';
+import '../../widgets/inventory_button.dart';
 
 class SceneInteractive extends StatefulWidget {
   const SceneInteractive({super.key});
@@ -31,7 +32,6 @@ class _SceneInteractiveState extends State<SceneInteractive>
     super.initState();
     _initAnimations();
 
-    // 🕒 Démarre le timer global si ce n’est pas déjà fait
     Future.delayed(Duration.zero, () {
       final timer = GameTimerService();
       if (!timer.isRunning) {
@@ -87,9 +87,10 @@ class _SceneInteractiveState extends State<SceneInteractive>
   void _onTapCabane(BuildContext context) {
     final inventory = Provider.of<InventoryService>(context, listen: false);
 
-    // 🗝️ Si la cabane est déverrouillée, on entre
     if (inventory.cabaneDeverrouillee ||
-        inventory.possedeObjet("Clé de la cabane")) {
+        inventory.possedeObjet("Clé ancienne")) {
+      inventory.marquerCabaneDeverrouillee();
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const ReveilEnigme1()),
@@ -113,16 +114,15 @@ class _SceneInteractiveState extends State<SceneInteractive>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 🌄 Décor principal
           FadeTransition(
             opacity: _decorOpacity,
             child: Image.asset("assets/images/paysage.png", fit: BoxFit.cover),
           ),
 
-          // 🕒 Timer global en haut à droite
           const TimerButton(),
 
-          // 🏚️ Cabane (entrée possible si clé trouvée)
+          const InventoryButton(),
+
           Positioned(
             bottom: 310,
             right: 60,
@@ -136,7 +136,6 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 🌿 Serre magique
           Positioned(
             bottom: 300,
             right: 320,
@@ -156,7 +155,6 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 🐦 Corbeau sur la branche
           Positioned(
             bottom: 480,
             right: 150,
@@ -176,7 +174,6 @@ class _SceneInteractiveState extends State<SceneInteractive>
             ),
           ),
 
-          // 💬 Message affiché temporairement
           if (_message.isNotEmpty)
             Positioned(
               bottom: 40,

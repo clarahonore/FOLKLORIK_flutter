@@ -87,6 +87,12 @@ class _SceneCorbeauEnigmeState extends State<SceneCorbeauEnigme> {
 
     inventory.marquerCleCorbeauRecuperee();
 
+    inventory.ajouterObjet(
+      "Clé ancienne",
+      "assets/images/cle_fee.png", // ou ton image de clé
+      "Une clé ancienne laissée par le corbeau. Elle semble ouvrir la cabane.",
+    );
+
     setState(() {
       _cleRecuperee = true;
       _animationEnCours = false;
